@@ -7,7 +7,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex items-center gap-4">
         <span className="font-extrabold tracking-tight text-4xl lg:text-5xl">
-          BrightWord
+          BrightWordaaa
         </span>
       </div>
       <p className="max-w-prose text-center">BrightWord Bot ChatBox test</p>
