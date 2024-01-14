@@ -6,11 +6,12 @@ import { getCloneableBody } from "next/dist/server/body-streams";
 import { getFocusedEditor } from "../EditorUtils";
 import { RiDoubleQuotesL } from "react-icons/ri";
 import {BsBraces, BsCode, BsImageFill, BsListOl, BsListUl, BsTypeBold, BsTypeItalic, BsTypeStrikethrough, BsTypeUnderline} from "react-icons/bs"
-import { AiFillCaretDown } from "react-icons/ai";
+import { AiFillCaretDown,AiOutlineAlignLeft,AiOutlineAlignRight,AiOutlineAlignCenter } from "react-icons/ai";
 import InsertLink from "../Link/InsertLink";
 import { linkOption } from "../Link/LinkForm";
 
 import Button from "./Button"; 
+import AlignButton from "./AlignButton";
 interface Props {
   editor: Editor | null;
   onOpenImageClick?(): void;
@@ -149,6 +150,24 @@ const Toolbar: FC<Props> = ({ editor,onOpenImageClick }): JSX.Element | null => 
       >
         <BsListUl />
       </Button>
+      <AlignButton
+        active={editor.isActive({ textAlign: 'left' })}
+        onClick={() => getFocusedEditor(editor).setTextAlign('left').run()}
+      >
+        <AiOutlineAlignLeft />
+      </AlignButton>
+      <AlignButton
+        active={editor.isActive({ textAlign: 'center' })}
+        onClick={() => getFocusedEditor(editor).setTextAlign('center').run()}
+      >
+        <AiOutlineAlignCenter />
+      </AlignButton>
+      <AlignButton
+        active={editor.isActive({ textAlign: 'left' })}
+        onClick={() => getFocusedEditor(editor).setTextAlign('right').run()}
+      >
+        <AiOutlineAlignRight />
+      </AlignButton>
     </div>
 
     <div className="h-4 w-[1px] bg-black mx-8" />

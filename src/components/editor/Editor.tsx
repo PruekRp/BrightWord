@@ -9,6 +9,7 @@ import Link from "@tiptap/extension-link";
 import EditLink from "./Link/EditLink";
 import TipTapImage from "@tiptap/extension-image";
 import Image from "@tiptap/extension-image";
+import TextAlign from '@tiptap/extension-text-align'
 
 interface Props {}
 
@@ -33,6 +34,9 @@ const Editor: FC<Props> = (props): JSX.Element => {
         HTMLAttributes: {
           class: "",
         },
+      }),
+      TextAlign.configure({
+        types: ['paragraph'],
       }),
     ],
     editorProps: {

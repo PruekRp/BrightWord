@@ -9,7 +9,7 @@ interface Props {
   onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-const Button: FC<Props> = ({
+const AlignButton: FC<Props> = ({
   children,
   active,
   disabled,
@@ -19,11 +19,9 @@ const Button: FC<Props> = ({
 
 
   const getActiveStyle = useCallback((): string => {
-    // Check if the button is for textAlign
-    const isTextAlignButton = children?.props.onClick?.toString().includes("setTextAlign");
 
-    if (active && !isTextAlignButton) {
-      return "bg-black text-white";
+    if (active) {
+      return "bg-zinc-500 text-white";
     } else {
       return "bg-zinc-500 text-white";
     }
@@ -46,4 +44,4 @@ const Button: FC<Props> = ({
   );
 };
 
-export default Button;
+export default AlignButton;
