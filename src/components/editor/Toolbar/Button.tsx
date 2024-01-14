@@ -18,7 +18,7 @@ const Button: FC<Props> = ({
 }): JSX.Element => {
   const getActiveStyle = useCallback((): string => {
     if (active)
-      return "bg-zinc-500 text-white";
+      return "bg-black text-white";
     else return "bg-zinc-500 text-white";
   }, [active]);
 

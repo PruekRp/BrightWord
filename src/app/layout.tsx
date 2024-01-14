@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className='p-4 m-auto max-w-7xl '>{/*if want border max width max-w-7xl use this*/}
+        <div className='p-4 m-auto max-w-7xl bg-white'>{/*if want border max width max-w-7xl use this*/}
       <NavBar/>
         {children}
         </div>

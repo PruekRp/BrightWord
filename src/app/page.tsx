@@ -5,8 +5,9 @@ import ChatPage from "./chatbox/page";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <ChatPage/>
+    <main className="flex flex-col min-h-screen">
+      <div>allpost</div>
+      {/*<ChatPage/>*/}
     </main>
   );
 }

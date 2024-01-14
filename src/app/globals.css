@@ -8,6 +8,8 @@
   pointer-events: none;
 }
 
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -81,7 +83,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-gray-200 text-foreground;
   }
 }
 

@@ -447,6 +447,11 @@
   resolved "https://registry.npmjs.org/@tiptap/extension-horizontal-rule/-/extension-horizontal-rule-2.1.16.tgz"
   integrity sha512-Q+Zp0lJF7212YIuZnbMmn4KC1MZoZjQIuvSd+DOgCwKSeUcTXBbljDjOiN8yrY134r+A4fFM7KHTXWYqZGZQug==
 
+"@tiptap/extension-image@^2.1.16":
+  version "2.1.16"
+  resolved "https://registry.npmjs.org/@tiptap/extension-image/-/extension-image-2.1.16.tgz"
+  integrity sha512-idvmJzdG/u9YDt/GOCvgQMB1p/GZbBqb2Spk8BhXHoBGHR4zFo609ExccXYKR4UWs0iTACDq80VwJvfHa8XYKw==
+
 "@tiptap/extension-italic@^2.1.16":
   version "2.1.16"
   resolved "https://registry.npmjs.org/@tiptap/extension-italic/-/extension-italic-2.1.16.tgz"
@@ -483,6 +488,11 @@
   version "2.1.16"
   resolved "https://registry.npmjs.org/@tiptap/extension-strike/-/extension-strike-2.1.16.tgz"
   integrity sha512-Z1hmBK1QWMMGDV2MJ3KBDiMuzcScjyx88cP5ln5G7626Zxeqywf84KF+2WyHBzJWfwMWpAouzwHKe9ld39Vu1w==
+
+"@tiptap/extension-text-align@^2.1.16":
+  version "2.1.16"
+  resolved "https://registry.npmjs.org/@tiptap/extension-text-align/-/extension-text-align-2.1.16.tgz"
+  integrity sha512-iyRqOZGoUl/yd2TZ+tvuRRxOym0bbE6+BoImd9TrF2bpYLSMt3wc1IzN2+jRGPkTtTnFbKLiFoyNZyYYyaxzkA==
 
 "@tiptap/extension-text@^2.1.16":
   version "2.1.16"
