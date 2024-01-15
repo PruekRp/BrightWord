@@ -1,6 +1,5 @@
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import fs from 'node:fs/promises'
 
 export async function getChunkedDocsFromPDF(e: File) {
   try {
