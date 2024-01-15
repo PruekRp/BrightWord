@@ -22,6 +22,9 @@ interface FinalPost {
 }
 
 interface Props {
+  initialValue: FinalPost
+  btnTitle?:string
+  busy:boolean
   onSubmit(post:FinalPost):void
 }
 
