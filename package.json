@@ -36,7 +36,10 @@
     "prisma": "^5.8.0",
     "react": "^18",
     "react-dom": "^18",
+<<<<<<< HEAD
     "react-icons": "^5.0.1",
+=======
+>>>>>>> parent of 7234d73 (#)
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7"
   },
