@@ -19,10 +19,9 @@ const Button: FC<Props> = ({
 
 
   const getActiveStyle = useCallback((): string => {
-    // Check if the button is for textAlign
-    const isTextAlignButton = children?.props.onClick?.toString().includes("setTextAlign");
+   
 
-    if (active && !isTextAlignButton) {
+    if (active) {
       return "bg-black text-white";
     } else {
       return "bg-zinc-500 text-white";
