@@ -14,7 +14,7 @@ export default function NavBar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-1">
             <span className="font-bold text-2xl flex items-center gap-2">
-              <Image src={logoImage} alt="Logo" width={40} height={40} />
+              {/* <Image src={logoImage} alt="Logo" width={40} height={40} /> */}
               BrightWord
             </span>
           </Link>
