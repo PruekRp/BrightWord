@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { ChangeEventHandler, FC, useCallback, useEffect, useState } from "react";
 import { useEditor, EditorContent, Range, getMarkRange } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar/Toolbar";
@@ -9,11 +9,31 @@ import Link from "@tiptap/extension-link";
 import EditLink from "./Link/EditLink";
 import TipTapImage from "@tiptap/extension-image";
 import Image from "@tiptap/extension-image";
+import TextAlign from "@tiptap/extension-text-align";
+import ThumbnailSelector from "./ThumbnailSelector";
+import Paragraph from "@tiptap/extension-paragraph";
+import ActionButton from "../ActionButton";
 
-interface Props {}
+interface FinalPost {
+  title: string;
+  content: string;
+  slug:string;
+  thumbnail?: File | string;
+}
+
+interface Props {
+  onSubmit(post:FinalPost)
+}
 
 const Editor: FC<Props> = (props): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
+  const [uploading, setUploading] = useState(false);
+  const [images, setImages] = useState<{ src: string }[]>([]);
+  const [post, setPost] = useState<FinalPost>({
+    title: "",
+    content: "",
+    slug: "",
+  });
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -34,6 +54,9 @@ const Editor: FC<Props> = (props): JSX.Element => {
           class: "",
         },
       }),
+      TextAlign.configure({
+        types: ["paragraph"],
+      }),
     ],
     editorProps: {
       handleClick(view, pos, event) {
@@ -49,7 +72,27 @@ const Editor: FC<Props> = (props): JSX.Element => {
       },
     },
   });
+  const slugify = (str:string) => {
+    return str
+    .toLowerCase() // แปลงข้อความเป็นตัวพิมพ์เล็กทั้งหมด
+    .trim() // ตัดช่องว่างที่อยู่ข้างหน้าและข้างหลังข้อความ
+    .replace(/[^\w\s-]/g, "") // ลบทุกอักขระที่ไม่ใช่ตัวอักษรหรือตัวเลขหรือเว้นวรรคหรือขีด
+    .replace(/[\s_-]+/g, "-") // แทนที่เว้นวรรคหรือขีดติดกันด้วยขีดเดียว
+    .replace(/^-+|-+$/g, ""); // ลบขีดที่อยู่ที่จุดเริ่มต้นหรือจุดสิ้นสุดข้อความ
+  } 
+  
 
+  const updateTitle: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
+    const newTitle = target.value;
+    const newSlug = slugify(newTitle);
+    setPost({ ...post, title: newTitle, slug: newSlug });
+  };
+  
+  const updateThumbnail = (file:File) => {
+    setPost({...post,thumbnail:file})
+  }
+
+  
   useEffect(() => {
     if (editor && selectionRange) {
       editor.commands.setTextSelection(selectionRange);
@@ -58,14 +101,25 @@ const Editor: FC<Props> = (props): JSX.Element => {
 
   return (
     <div className="p-3 transition">
+      <div className="sticky top-0 z-10 bg-bl"></div>
+      {/*Thumbnail Selector and Submit Button*/}
+      <div className="flex items-center justify-between mb-3">
+        <ThumbnailSelector onChange={(file) => console.log(file)} />
+        <div>
+          <ActionButton title="Submit" />
+        </div>
+      </div>
+
+      {/*Title Input*/}
       <input
         type="text"
         className="py-5 outline-none bg-transparent w-full border-0 border-b-[1px] border-zinc-500 text-5xl font-semibold text-black mb-3"
         placeholder="Title"
+        onChange={updateTitle}
       />
+
       <Toolbar editor={editor} />
       <div className="h-[1px] w-full bg-black my-3" />
-
       {editor ? <EditLink editor={editor} /> : null}
       <EditorContent editor={editor} className="min-h-[700px]" />
     </div>

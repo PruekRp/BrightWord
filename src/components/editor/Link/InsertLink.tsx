@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState,useRef} from "react";
 import { BsLink45Deg } from "react-icons/bs";
 import Button from "../Toolbar/Button"; 
 import LinkForm, { linkOption } from "./LinkForm";
@@ -20,6 +20,7 @@ const InsertLink: FC<Props> = ({ onSubmit }): JSX.Element => {
   const hideForm = () => setVisible(false);
   const showForm = () => setVisible(true);
 
+  
   return (
     <div
       onKeyDown={({ key }) => {
