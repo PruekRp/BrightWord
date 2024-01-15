@@ -28,15 +28,17 @@ interface Props {
   onSubmit(post:FinalPost):void
 }
 
-const Editor: FC<Props> = ({onSubmit}): JSX.Element => {
+const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<{ src: string }[]>([]);
+  const [slug,setInitialSlug] = useState<string>('');
   const [post, setPost] = useState<FinalPost>({
     title: "",
     content: "",
     slug: "",
   });
+  console.log(initialValue)
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -104,17 +106,27 @@ const Editor: FC<Props> = ({onSubmit}): JSX.Element => {
   useEffect(() => {
     if (editor && selectionRange) {
       editor.commands.setTextSelection(selectionRange);
+      
     }
   }, []);
+
+  useEffect(()=>{
+    if(initialValue){
+      setPost({...initialValue})
+      editor?.commands.setContent(initialValue.content)
+      const {slug} = initialValue
+      setInitialSlug(slug)
+    }
+  },[initialValue,editor])
 
   return (
     <div className="p-3 transition">
       <div className="sticky top-0 z-10 bg-bl"></div>
       {/*Thumbnail Selector and Submit Button*/}
       <div className="flex items-center justify-between mb-3">
-        <ThumbnailSelector onChange={updateThumbnail} />
+        <ThumbnailSelector initialValue={post.thumbnail as string} onChange={updateThumbnail} />
         <div>
-          <ActionButton title="Submit" onClick={handleSubmit} />
+          <ActionButton busy={busy} title={btnTitle} onClick={handleSubmit} />
         </div>
       </div>
 
@@ -124,6 +136,7 @@ const Editor: FC<Props> = ({onSubmit}): JSX.Element => {
         className="py-5 outline-none bg-transparent w-full border-0 border-b-[1px] border-zinc-500 text-5xl font-semibold text-black mb-3"
         placeholder="Title"
         onChange={updateTitle}
+        value={post.title}
       />
 
       <Toolbar editor={editor} />
