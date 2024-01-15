@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Message } from "ai";
 import { useEffect, useRef } from "react";
+import FileUpload from "./FileUpload";
 
 interface AIChatBoxProps {
   open: boolean;
@@ -22,6 +23,7 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
     error,
   } = useChat();
 
+  const fsPromises = import('node:fs/promises');
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +51,8 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
       <button onClick={onClose} className="mb-1 ms-auto block">
         <XCircle size={30} />
       </button>
-      <p>Upload PDF</p>
+      <FileUpload/>
+      {/* <p>Upload PDF</p>
       <form onSubmit={handleProcessPDF}>
         <div className="flex">
           <Input id="fileInput" type="file"/>
@@ -57,7 +60,7 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
             Process
           </Button>
         </div>
-      </form>
+      </form> */}
       <div className="flex h-[600px] flex-col rounded bg-background border shadow-xl">
         <div className="h-full mt-3 px-3 overflow-y-auto" ref={scrollRef}>
           {messages.map((message) => (
@@ -138,8 +141,3 @@ function ChatMessage({
   );
 }
 
-async function handleProcessPDF(event:React.FormEvent<HTMLFormElement>) {
-  event.preventDefault();
-  
-  
-}

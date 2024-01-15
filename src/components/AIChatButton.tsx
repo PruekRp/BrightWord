@@ -5,7 +5,6 @@ import { Bot } from "lucide-react";
 
 export default function AIChatButton() {
   const [chatBoxOpen, setChatBoxOpen] = useState(false);
-
   return (
     <>
       <Button onClick={() => setChatBoxOpen(true)}>

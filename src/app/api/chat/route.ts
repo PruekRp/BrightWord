@@ -10,26 +10,48 @@ export async function POST(req: Request) {
 
     const messagesTruncate = messages.slice(-6);
 
-    const embedding = await getEmbedding(
-      messagesTruncate.map((message) => message.content).join("\n"),
-    );
+    const inputText = messagesTruncate
+      .map((message) => message.content)
+      .join("\n");
 
-    const vectorQueryResponse = await pdfIndex.query({
+    const embedding = await getEmbedding(inputText);
+
+    const vectorQueryResponse = await pdfIndex.namespace('pdftext2').query({
       vector: embedding,
-      topK: 30,
+      topK: 4,
     });
 
+    console.log("Pinecone Response:", vectorQueryResponse);
+
+    let pineconeResponse = "";
+    if (vectorQueryResponse.matches.length > 0) {
+      const relevantPDF = vectorQueryResponse.matches[0];
+      pineconeResponse = `Relevant PDF Content:\n${relevantPDF}`;
+      console.log("relevantPDF Response:", relevantPDF);
+    } else {
+      pineconeResponse = "No relevant PDF found.";
+    }
     const systemMessage: ChatCompletionMessage = {
       role: "assistant",
       content:
-        "You are an intelligent pdf-talking app. You answer the user's question based on their existing PDF.",
+        "You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf.\n" +
+        "Pinecone Results:\n" +
+        pineconeResponse,
     };
+
+    const openaiMessages = [systemMessage, ...messagesTruncate];
 
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       stream: true,
-      messages: [systemMessage, ...messagesTruncate],
+      messages: openaiMessages,
     });
+
+    console.log("OpenAI API Response:", response);
+    console.log("System Message:", systemMessage);
+    console.log("Embedding from OpenAI:", embedding);
+    console.log("Messages to OpenAI API:", openaiMessages);
+    console.log("Pinecone Results in System Message:", pineconeResponse);
 
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
