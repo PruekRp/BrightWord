@@ -79,11 +79,11 @@ const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}
   });
   const slugify = (str:string) => {
     return str
-    .toLowerCase() // แปลงข้อความเป็นตัวพิมพ์เล็กทั้งหมด
-    .trim() // ตัดช่องว่างที่อยู่ข้างหน้าและข้างหลังข้อความ
-    .replace(/[^\w\s-]/g, "") // ลบทุกอักขระที่ไม่ใช่ตัวอักษรหรือตัวเลขหรือเว้นวรรคหรือขีด
-    .replace(/[\s_-]+/g, "-") // แทนที่เว้นวรรคหรือขีดติดกันด้วยขีดเดียว
-    .replace(/^-+|-+$/g, ""); // ลบขีดที่อยู่ที่จุดเริ่มต้นหรือจุดสิ้นสุดข้อความ
+    .replace(/\s+/g,"-")
+            .replace(/[^\u0E00-\u0E7F\w\-]+/g,'')            
+            .replace(/\-\-+/g,'-')
+            .replace(/^-+/,'')
+            .toLowerCase();
   } 
   
 

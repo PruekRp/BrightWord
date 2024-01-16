@@ -13,7 +13,6 @@ export default function WriteLayout({
   }) {
     return (
       <section>
-       
         {children}
       </section>
     )
