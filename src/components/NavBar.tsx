@@ -14,12 +14,12 @@ export default function NavBar() {
   console.log(data,status)
 
   const handleLogin = () => {
-    // ให้ใช้ signIn จาก NextAuth.js เพื่อเริ่มกระบวนการล็อกอิน
+    //! ให้ใช้ signIn จาก NextAuth.js เพื่อเริ่มกระบวนการล็อกอิน
     signIn("google");
   };
 
   const handleLogout = () => {
-    // ให้ใช้ signOut จาก NextAuth.js เพื่อล็อกเอาท์
+    //! ให้ใช้ signOut จาก NextAuth.js เพื่อล็อกเอาท์
     signOut();
   };
 
@@ -38,8 +38,6 @@ export default function NavBar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-1">
           <span className="font-bold text-2xl flex items-center gap-2">
-            {/* Include Google icon */}
-            <FaGoogle size={24} color="#4285F4" />
             BrightWord
           </span>
         </Link>
@@ -52,7 +50,7 @@ export default function NavBar() {
             <>
             <Link legacyBehavior href="/write">
             <a className="flex item-center text-highlight-light dark:text-highlight-dark text-xl p-3 hover:scale-[0.98] transition">
-              <span >Write</span>
+              <Button>Write</Button>
             </a>
           </Link>
             <Button onClick={handleLogout}>Logout</Button>
@@ -62,7 +60,6 @@ export default function NavBar() {
             <Button onClick={handleLogin}>
               {/* Use Google icon as the button */}
               <FaGoogle size={18} color="#4285F4" />
-              
             </Button>
           )}
         </div>
