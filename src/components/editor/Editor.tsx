@@ -14,7 +14,7 @@ import ThumbnailSelector from "./ThumbnailSelector";
 import Paragraph from "@tiptap/extension-paragraph";
 import ActionButton from "../ActionButton";
 
-interface FinalPost {
+export interface FinalPost {
   title: string;
   content: string;
   slug:string;
@@ -38,7 +38,9 @@ const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}
     content: "",
     slug: "",
   });
-  console.log(initialValue)
+  
+  
+
   const editor = useEditor({
     extensions: [
       StarterKit,
