@@ -13,8 +13,15 @@ import TextAlign from "@tiptap/extension-text-align";
 import ThumbnailSelector from "./ThumbnailSelector";
 import Paragraph from "@tiptap/extension-paragraph";
 import ActionButton from "../ActionButton";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import { app } from "../../utils/firebase"
 
-interface FinalPost {
+export interface FinalPost {
   title: string;
   content: string;
   slug:string;
@@ -22,18 +29,25 @@ interface FinalPost {
 }
 
 interface Props {
-  onSubmit(post:FinalPost)
+  initialValue: FinalPost
+  btnTitle?:string
+  busy:boolean
+  onSubmit(post:FinalPost):void
 }
 
-const Editor: FC<Props> = (props): JSX.Element => {
+const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<{ src: string }[]>([]);
+  const [slug,setInitialSlug] = useState<string>('');
   const [post, setPost] = useState<FinalPost>({
     title: "",
     content: "",
     slug: "",
   });
+  
+  
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -74,11 +88,11 @@ const Editor: FC<Props> = (props): JSX.Element => {
   });
   const slugify = (str:string) => {
     return str
-    .toLowerCase() // แปลงข้อความเป็นตัวพิมพ์เล็กทั้งหมด
-    .trim() // ตัดช่องว่างที่อยู่ข้างหน้าและข้างหลังข้อความ
-    .replace(/[^\w\s-]/g, "") // ลบทุกอักขระที่ไม่ใช่ตัวอักษรหรือตัวเลขหรือเว้นวรรคหรือขีด
-    .replace(/[\s_-]+/g, "-") // แทนที่เว้นวรรคหรือขีดติดกันด้วยขีดเดียว
-    .replace(/^-+|-+$/g, ""); // ลบขีดที่อยู่ที่จุดเริ่มต้นหรือจุดสิ้นสุดข้อความ
+    .replace(/\s+/g,"-")
+            .replace(/[^\u0E00-\u0E7F\w\-]+/g,'')            
+            .replace(/\-\-+/g,'-')
+            .replace(/^-+/,'')
+            .toLowerCase();
   } 
   
 
@@ -92,21 +106,67 @@ const Editor: FC<Props> = (props): JSX.Element => {
     setPost({...post,thumbnail:file})
   }
 
+  const handleSubmit = () => {
+    if(!editor) return;
+    onSubmit({...post,content:editor.getHTML()})
+  }
+
   
   useEffect(() => {
     if (editor && selectionRange) {
       editor.commands.setTextSelection(selectionRange);
+      
     }
   }, []);
+
+  useEffect(()=>{
+    if(initialValue){
+      setPost({...initialValue})
+      editor?.commands.setContent(initialValue.content)
+      const {slug} = initialValue
+      setInitialSlug(slug)
+    }
+    const storage = getStorage(app);
+    const upload = () => {
+      const name = new Date().getTime() + file.name;
+      const storageRef = ref(storage, name);
+
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {},
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setMedia(downloadURL);
+          });
+        }
+      );
+    };
+
+  },[initialValue,editor])
 
   return (
     <div className="p-3 transition">
       <div className="sticky top-0 z-10 bg-bl"></div>
       {/*Thumbnail Selector and Submit Button*/}
       <div className="flex items-center justify-between mb-3">
-        <ThumbnailSelector onChange={(file) => console.log(file)} />
+        <ThumbnailSelector initialValue={post.thumbnail as string} onChange={updateThumbnail} />
         <div>
-          <ActionButton title="Submit" />
+          <ActionButton busy={busy} title={btnTitle} onClick={handleSubmit} />
         </div>
       </div>
 
@@ -116,6 +176,7 @@ const Editor: FC<Props> = (props): JSX.Element => {
         className="py-5 outline-none bg-transparent w-full border-0 border-b-[1px] border-zinc-500 text-5xl font-semibold text-black mb-3"
         placeholder="Title"
         onChange={updateTitle}
+        value={post.title}
       />
 
       <Toolbar editor={editor} />
