@@ -3,20 +3,31 @@ import prisma from '../../../lib/db/prisma'
 import { NextResponse } from "next/server";
 
 //CREATE A GET METHOD
-export const GET = async (req:Request, res:NextResponse) => {
-  try {
-    const blogs = await prisma.blog.findMany({
-      include: {
-        user: true,
-      },
-    });
+export const GET = async (req) => {
+  const { searchParams } = new URL(req.url);
 
-    return new NextResponse(JSON.stringify(blogs), { status: 200 });
-  } catch (error) {
-    console.error(error);
+  const page = searchParams.get("page");
+
+
+  const POST_PER_PAGE = 2;
+
+  const query = {
+    take: POST_PER_PAGE,
+    skip: POST_PER_PAGE * (page - 1),
+  
+  };
+
+
+  try {
+    const [blog, count] = await prisma.$transaction([
+      prisma.blog.findMany(query),
+      prisma.blog.count({ where: query.where }),
+    ]);
+    return new NextResponse(JSON.stringify({ blog, count }, { status: 200 }));
+  } catch (err) {
+    console.log(err);
     return new NextResponse(
-      JSON.stringify({ message: 'Something went wrong!' }),
-      { status: 500 }
+      JSON.stringify({ message: "Something went wrong!" }, { status: 500 })
     );
   }
 };
