@@ -2,7 +2,26 @@ import { getAuthSession } from "@/utils/auth";
 import prisma from '../../../lib/db/prisma'
 import { NextResponse } from "next/server";
 
-// CREATE A POST
+//CREATE A GET METHOD
+export const GET = async (req:Request, res:NextResponse) => {
+  try {
+    const blogs = await prisma.blog.findMany({
+      include: {
+        user: true,
+      },
+    });
+
+    return new NextResponse(JSON.stringify(blogs), { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new NextResponse(
+      JSON.stringify({ message: 'Something went wrong!' }),
+      { status: 500 }
+    );
+  }
+};
+
+// CREATE A POST METHOD
 export const POST = async (req:Request) => {
     const session = await getAuthSession();
   
