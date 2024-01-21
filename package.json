@@ -28,6 +28,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.0",
     "eslint-config-prettier": "^9.1.0",
+    "firebase": "^10.7.2",
     "html-react-parser": "^5.1.1",
     "langchain": "^0.1.2",
     "lucide-react": "^0.309.0",

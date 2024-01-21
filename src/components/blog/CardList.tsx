@@ -42,9 +42,9 @@ const CardList = ({ page }) => {
   }, [page]);
 
   return (
-    <div>
-      <h1>Recent Posts</h1>
-      <div>
+    <div className="w-full">
+      <h1 className="font-bold p-3 text-3xl">Recent Posts</h1>
+      <div className="">
         {blogData?.map((item) => (
           <CardPost item={item} key={item.id} />
         ))}
