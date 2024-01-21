@@ -5,7 +5,7 @@ import { FaArrowRightLong } from "react-icons/fa6";
 const CardPost = ({ key, item }: any) => {
   return (
     <div
-      className="flex border-2 rounded-md overflow-hidden shadow-lg mb-4 w-100"
+      className="flex border-2 rounded-md overflow-hidden shadow-lg mb-4 w-100 justify-between" 
       key={key}
     >
       <div className="flex-1 p-4">
@@ -17,22 +17,23 @@ const CardPost = ({ key, item }: any) => {
           dangerouslySetInnerHTML={{ __html: item?.content.substring(0, 60) }}
         />
         <Link href={`/blogs/${item.id}`}>
-          <span className="flex flex-row text-blue-500 hover:underline">
-            Read More <FaArrowRightLong />
+          <span className="flex flex-row items-center text-blue-500 hover:underline">
+            Read More&nbsp;
+            <FaArrowRightLong className="ml-2" />
           </span>
         </Link>
-        <div className="mt-10 text-gray-500 flex justify-between">
+        <div className="mt-7 text-gray-500 flex justify-between">
           <div>By {item.userEmail}</div>
           <div> {item.createAt.substring(0, 10)}</div>
         </div>
       </div>
-      <div className="relative h-48 w-1/3">
+      <div className="relative h-50 w-1/3">
         {item.thumbnail && (
           <Image
             src={item.thumbnail}
             alt={item.title}
             layout="fill"
-            objectFit="contain"
+            objectFit="fill"
           />
         )}
       </div>

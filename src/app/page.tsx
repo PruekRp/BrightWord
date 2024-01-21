@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,9 +13,8 @@ export default function Home({ searchParams }: any) {
   const page = parseInt(searchParams.page) || 1;
   return (
     <main className="flex w-full">
-     
-        <CardList page={page}/>
-     
+      <CardList page={page} />
+
       {/*<ChatPage/>*/}
     </main>
   );
