@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Message } from "ai";
 import { useEffect, useRef } from "react";
+import FileUpload from "./FileUpload";
 
 interface AIChatBoxProps {
   open: boolean;
@@ -49,16 +50,9 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
       <button onClick={onClose} className="mb-1 ms-auto block">
         <XCircle size={30} />
       </button>
-      <p>Upload PDF</p>
-      <form onSubmit={handleProcessPDF}>
-        <div className="flex">
-          <Input id="fileInput" type="file"/>
-          <Button type="submit" className="mb-1 ml-1 ms-auto flex">
-            Process
-          </Button>
-        </div>
-      </form>
+     
       <div className="flex h-[600px] flex-col rounded bg-background border shadow-xl">
+         <FileUpload/>
         <div className="h-full mt-3 px-3 overflow-y-auto" ref={scrollRef}>
           {messages.map((message) => (
             <ChatMessage message={message} key={message.id} />
