@@ -12,7 +12,7 @@ export const GET = async (req:Request) => {
   const POST_PER_PAGE = 2;
 
   const query = {
-    take: POST_PER_PAGE,
+    take: 2,
     skip: POST_PER_PAGE * (page - 1),
     orderBy: { createAt: "desc" }, // เรียงลำดับบทความตามวันที่ล่าสุด
   };

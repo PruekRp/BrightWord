@@ -33,6 +33,7 @@ const CardList = ({ page }) => {
         const { blog, count } = await getData(page);
         setBlogData(blog);
         setCount(count);
+        console.log(page)
       } catch (error) {
         console.error("Error fetching data:", error);
       }

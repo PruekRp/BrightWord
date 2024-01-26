@@ -15,7 +15,7 @@ const SinglePage = ({ params }) => {
         const res = await fetch(
           `http://localhost:3000/api/blog/${params.blogId}`,
         );
-
+          console.log(params.blogId)
         if (!res.ok) {
           throw new Error("Failed");
         }
@@ -105,7 +105,7 @@ const SinglePage = ({ params }) => {
           )}
         </div>
       </div>
-      <div className="flex p-5 text-gray-800">{parse(data.content)}</div>
+      <div className="flex flex-col p-5 text-gray-800">{parse(data.content)}</div>
     </>
   );
 };

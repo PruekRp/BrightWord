@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from '../../../../lib/db/prisma'
 import getCurrentUser from "@/app/actions/getCurrentUser";
-
+import { getAuthSession } from "@/utils/auth";
 
 interface IParams{
     blogId?:string
@@ -34,31 +34,43 @@ export const GET = async (req:Request,  {params}:{params:IParams}) => {
       );
     }
   };
-export async function DELETE(
-    request:Request,
-    {params}:{params:IParams}
-){
-    const currentUser = await getCurrentUser()
 
-    if(!currentUser) {
-        return NextResponse.error
-    }
-    const {blogId} = params
-
-    if(!blogId || typeof blogId !== 'string'){
-       throw new Error('invalid Id')
+  export async function DELETE(
+    request: Request,
+    { params }: { params: IParams }
+) {
+    const { blogId } = params;
+  
+    if (!blogId || typeof blogId !== 'string') {
+        throw new Error('Invalid Id');
     }
 
-    const blog = await prisma.blog.deleteMany({
-        where:{
-            id:blogId,
-            userEmail:currentUser.email
+
+
+    try {
+        const blog = await prisma.blog.deleteMany({
+            where: {
+                id: blogId,  
+            },
+        });
+
+        if (blog && blog.count > 0) {
+            return NextResponse.json({ message: 'Blog deleted successfully' });
+        } else {
+            return new NextResponse(
+                JSON.stringify({ message: 'Blog not found or you do not have permission' }),
+                { status: 404 }
+            );
         }
-
-    })
-
-    return NextResponse.json(blog)
+    } catch (error) {
+        console.error(error);
+        return new NextResponse(
+            JSON.stringify({ message: 'Something went wrong!' }),
+            { status: 500 }
+        );
+    }
 }
+
 
 export async function PUT(
     request:Request,

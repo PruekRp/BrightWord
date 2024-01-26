@@ -11,6 +11,7 @@ import CardList from "@/components/blog/CardList";
 
 export default function Home({ searchParams }: any) {
   const page = parseInt(searchParams.page) || 1;
+  console.log(page)
   return (
     <main className="flex w-full">
       <CardList page={page} />
