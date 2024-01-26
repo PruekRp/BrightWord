@@ -20,8 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-        <div className='p-4 m-auto max-w-7xl bg-white'>{/*if want border max width max-w-7xl use this*/}
         <NavBar/>
+        <div className='p-4 m-auto max-w-7xl bg-white'>{/*if want border max width max-w-7xl use this*/}
         {children}
         </div>
         </AuthProvider>
