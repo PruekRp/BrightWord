@@ -39,7 +39,7 @@ import { Fragment, useState } from "react"; // Import Fragment and useState
       );
     }
     
-
+    console.log(data)
     return (
        <div className="relative bg-gradient-to-r from-orange-500 to-yellow-400">
         {/* Main Content */}
@@ -67,43 +67,13 @@ import { Fragment, useState } from "react"; // Import Fragment and useState
                   >
                     <Image
                       src={data.user.image}
-                      width={30}D
+                      width={30}
                       height={35}
                       alt="Profile Image"
                       className="w-9 h-9 rounded-full cursor-pointer"
                     />
                   </button>
 
-<<<<<<< HEAD
-          {/* Navbar Actions */}
-          <div className="flex items-center gap-4">
-            {data ? (
-              <div className="flex space-x-5">
-                <AIChatButton />
-                <Button>
-                <Link href="/write">write</Link>
-</Button>
-                {/* Profile Image */}
-                <button
-                  onClick={toggleDropdown}
-                  className="focus:outline-none"
-                >
-                  <Image
-                    src={data.user.image}
-                    width={30}
-                    height={35}
-                    alt="Profile Image"
-                    className="w-9 h-9 rounded-full cursor-pointer"
-                  />
-                </button>
-
-                {/* Dropdown */}
-                {isDropdownOpen && (
-                  <div className="absolute right-10 mt-11 bg-white border border-gray-200 rounded shadow-md">
-                    <div className="p-2">
-                      <p className="text-gray-700">{data.user?.name}</p>
-                      <p className="text-gray-500">{data.user?.email}</p>
-=======
                   {/* Dropdown */}
                   {isDropdownOpen && (
                     <div className="absolute right-10 mt-40 bg-white border border-gray-200 rounded shadow-md">
@@ -114,7 +84,6 @@ import { Fragment, useState } from "react"; // Import Fragment and useState
                       <div className="p-2">
                         <Button onClick={handleLogout}>Logout</Button>
                       </div>
->>>>>>> 71d4151991a5b13e9f8ffd9031d6bf1c13c634bc
                     </div>
                   )}
                 </div>
