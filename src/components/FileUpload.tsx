@@ -54,21 +54,21 @@ export default function FileUpload() {
 
   return (
     <div>
-      <label htmlFor="fromFile">Upload PDF</label>
+      <label htmlFor="fromFile" >Upload PDF</label>
       <div className="flex">
         <Input id="fromFile" type="file" onChange={handleFileChange} />
-            <Button
-              type="button"
-              onClick={handleUploadClick}
-              disabled={uploading}
-              className="mb-1 ml-1 ms-auto flex"
-            >
-              {uploading ? "Please wait..." : "Upload"}
-            </Button>
+        <Button
+          type="button"
+          onClick={handleUploadClick}
+          disabled={uploading}
+          className="mb-1 ml-1 ms-auto flex"
+        >
+          {uploading ? "Please wait..." : "Upload"}
+        </Button>
+        <Button type="button" onClick={handleClearPinecone} className="ml-1 mr-1">
+          Clear PDFs
+        </Button>
       </div>
-      <Button type="button" onClick={handleClearPinecone}>
-        Clear PDFs
-      </Button>
     </div>
   );
 }

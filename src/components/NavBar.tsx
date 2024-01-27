@@ -66,11 +66,11 @@ export default function NavBar() {
                 {/* Profile Image */}
                 <button
                   onClick={toggleDropdown}
-                  className="focus:outline-none"F
+                  className="focus:outline-none"
                 >
                   <Image
                     src={data.user.image}
-                    width={30}D
+                    width={30}
                     height={35}
                     alt="Profile Image"
                     className="w-9 h-9 rounded-full cursor-pointer"
