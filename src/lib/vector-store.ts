@@ -9,7 +9,7 @@ export async function embedAndStoreDocs(
     try {
         
         const embeddings = new OpenAIEmbeddings({
-          openAIApiKey: ""
+          openAIApiKey: "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"
         });
         const index = pdfIndex;
 
