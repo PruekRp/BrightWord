@@ -50,7 +50,9 @@ const CardPost = ({ key, item }: any) => {
 
           {session?.user?.email === item.userEmail && (
             <div className="flex items-center gap-2 p-1">
-              <FaEdit className="text-orange-500 cursor-pointer ml-2 hover:text-orange-700 size-6" />
+              <Link href={`/edit/${item.id}`}>
+                <FaEdit className="text-orange-500 cursor-pointer ml-2 hover:text-orange-700 size-6" />
+              </Link>
               <FaTrashAlt
                 className="text-red-500 cursor-pointer hover:text-red-700 size-5"
                 onClick={() => handleDelete(item.id)}

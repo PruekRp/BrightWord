@@ -56,7 +56,7 @@ const SinglePage = ({ params }) => {
   if (!data) {
     return (
       <div className="p-4">
-        <p className="text-red-500">Data not available for blog ID</p>
+        <p className="text-red-500">Loading...</p>
       </div>
     );
   }

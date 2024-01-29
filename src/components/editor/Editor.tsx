@@ -1,5 +1,11 @@
 "use client";
-import React, { ChangeEventHandler, FC, useCallback, useEffect, useState } from "react";
+import React, {
+  ChangeEventHandler,
+  FC,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useEditor, EditorContent, Range, getMarkRange } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar/Toolbar";
@@ -19,34 +25,37 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { app } from "../../utils/firebase"
+import { app } from "../../utils/firebase";
 
 export interface FinalPost {
   title: string;
   content: string;
-  slug:string;
+  slug: string;
   thumbnail?: File | string;
 }
 
 interface Props {
-  initialValue: FinalPost
-  btnTitle?:string
-  busy:boolean
-  onSubmit(post:FinalPost):void
+  initialValue: FinalPost;
+  btnTitle?: string;
+  busy: boolean;
+  onSubmit(post: FinalPost): void;
 }
 
-const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}): JSX.Element => {
+const Editor: FC<Props> = ({
+  initialValue,
+  btnTitle = "Submit",
+  busy = false,
+  onSubmit,
+}): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<{ src: string }[]>([]);
-  const [slug,setInitialSlug] = useState<string>('');
+  const [slug, setInitialSlug] = useState<string>("");
   const [post, setPost] = useState<FinalPost>({
     title: "",
     content: "",
     slug: "",
   });
-  
-  
 
   const editor = useEditor({
     extensions: [
@@ -86,45 +95,42 @@ const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}
       },
     },
   });
-  const slugify = (str:string) => {
+  const slugify = (str: string) => {
     return str
-    .replace(/\s+/g,"-")
-            .replace(/[^\u0E00-\u0E7F\w\-]+/g,'')            
-            .replace(/\-\-+/g,'-')
-            .replace(/^-+/,'')
-            .toLowerCase();
-  } 
-  
+      .replace(/\s+/g, "-")
+      .replace(/[^\u0E00-\u0E7F\w\-]+/g, "")
+      .replace(/\-\-+/g, "-")
+      .replace(/^-+/, "")
+      .toLowerCase();
+  };
 
   const updateTitle: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const newTitle = target.value;
     const newSlug = slugify(newTitle);
     setPost({ ...post, title: newTitle, slug: newSlug });
   };
-  
-  const updateThumbnail = (file:File) => {
-    setPost({...post,thumbnail:file})
-  }
+
+  const updateThumbnail = (file: File) => {
+    setPost({ ...post, thumbnail: file });
+  };
 
   const handleSubmit = () => {
-    if(!editor) return;
-    onSubmit({...post,content:editor.getHTML()})
-  }
+    if (!editor) return;
+    onSubmit({ ...post, content: editor.getHTML() });
+  };
 
-  
   useEffect(() => {
     if (editor && selectionRange) {
       editor.commands.setTextSelection(selectionRange);
-      
     }
   }, []);
 
-  useEffect(()=>{
-    if(initialValue){
-      setPost({...initialValue})
-      editor?.commands.setContent(initialValue.content)
-      const {slug} = initialValue
-      setInitialSlug(slug)
+  useEffect(() => {
+    if (initialValue) {
+      setPost({ ...initialValue });
+      editor?.commands.setContent(initialValue.content);
+      const { slug } = initialValue;
+      setInitialSlug(slug);
     }
     const storage = getStorage(app);
     const upload = () => {
@@ -153,18 +159,20 @@ const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setMedia(downloadURL);
           });
-        }
+        },
       );
     };
-
-  },[initialValue,editor])
+  }, [initialValue, editor]);
 
   return (
     <div className="p-3 transition">
       <div className="sticky top-0 z-10 bg-bl"></div>
       {/*Thumbnail Selector and Submit Button*/}
       <div className="flex items-center justify-between mb-3">
-        <ThumbnailSelector initialValue={post.thumbnail as string} onChange={updateThumbnail} />
+        <ThumbnailSelector
+          initialValue={post.thumbnail as string}
+          onChange={updateThumbnail}
+        />
         <div>
           <ActionButton busy={busy} title={btnTitle} onClick={handleSubmit} />
         </div>

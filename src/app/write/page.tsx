@@ -5,7 +5,6 @@ import Editor from "@/components/editor/Editor";
 const Write = () => {
   const [creating, setCreating] = useState(false);
 
-  
 
   const handleSubmit = async (post:any) => {
     console.log(post)

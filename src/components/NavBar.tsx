@@ -41,13 +41,13 @@ import { Fragment, useState } from "react"; // Import Fragment and useState
     
     console.log(data)
     return (
-       <div className="relative bg-gradient-to-r from-orange-500 to-yellow-400">
+       <div className="relative bg-black">
         {/* Main Content */}
-        <div className="p-4 shadow-lg">
+        <div className="p-5  shadow-lg">
           <div className="flex flex-wrap gap-3 items-center justify-between m-auto">
             {/* Logo */}
             <Link href="/">
-              <span className="font-bold text-2xl text-white flex items-center gap-2">
+              <span className="font-bold text-2xl text-yellow-300 flex items-center gap-2">
                 BrightWord
               </span>
             </Link>
@@ -58,7 +58,7 @@ import { Fragment, useState } from "react"; // Import Fragment and useState
                 <div className="flex space-x-5 items-center">
                   <AIChatButton />
               
-                  <Link href="/write">write</Link>
+                  <Link href="/write" className=" text-yellow-300 font-bold">write</Link>
 
                   {/* Profile Image */}
                   <button
