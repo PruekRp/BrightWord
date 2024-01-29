@@ -44,14 +44,16 @@ const CardList = ({ page }) => {
 
   return (
     <div className="w-full">
-      <h1 className="font-bold p-2 my-5 text-3xl">Latest Posts</h1>
-      <div className="">
-        {blogData?.map((item) => (
-          <CardPost item={item} key={item.id} />
-        ))}
-      </div>
-      <Pagination page={page} hasPrev={hasPrev} hasNext={hasNext} />
-    </div>
+  <h1 className="font-bold p-2 my-5 text-6xl">" Embarking on a Journey of Wisdom "</h1>
+  <p className="my-5 p-2">Check out our blog posts for the latest</p>
+  <div className="">
+    {blogData?.map((item) => (
+      <CardPost item={item} key={item.id} />
+    ))}
+  </div>
+  <Pagination page={page} hasPrev={hasPrev} hasNext={hasNext} />
+</div>
+
   );
 };
 
