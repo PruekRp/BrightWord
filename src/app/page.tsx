@@ -15,7 +15,6 @@ export default function Home({ searchParams }: any) {
   return (
     <main className="flex w-full">
       <CardList page={page} />
-
       {/*<ChatPage/>*/}
     </main>
   );

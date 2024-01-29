@@ -37,7 +37,6 @@ const Write = () => {
       <Editor
         onSubmit={handleSubmit}
         busy={creating}
-        
       />
     </div>
   );

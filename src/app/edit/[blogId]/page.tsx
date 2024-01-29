@@ -1,12 +1,12 @@
 'use client'
 import { useState, useEffect } from "react";
-import Editor from "@/components/editor/Editor";
+import Editor, { FinalPost } from "@/components/editor/Editor";
 
 const Edit = ({ params }) => {
   const [editing, setEditing] = useState(false);
   const [blogData, setBlogData] = useState({});
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
@@ -29,11 +29,12 @@ const Edit = ({ params }) => {
     fetchBlogData();
     
   }, [params.blogId]);
-  console.log(blogData)
-  const handleEditSubmit = async (updatedPost:any) => {
+
+  const handleSubmit = async (updatedPost:FinalPost) => {
+    console.log(updatedPost)
     try {
       setEditing(true);
-
+      console.log(updatedPost)
       // Make a PUT request to update the blog post
       const response = await fetch(`/api/blog/${params.blogId}`, {
         method: "PUT",
@@ -57,13 +58,14 @@ const Edit = ({ params }) => {
   if (loading) {
     return <p>Loading...</p>;
   }
-
+  console.log(blogData)
   return (
     <div>
       <Editor
+        onSubmit={handleSubmit}
         initialValue={blogData}
-        onSubmit={handleEditSubmit}
         busy={editing}
+        btnTitle="Update"
       />
     </div>
   );

@@ -29,7 +29,7 @@ export const GET = async (req:Request,  {params}:{params:IParams}) => {
     } catch (error) {
       console.error(error);
       return new NextResponse(
-        JSON.stringify({ message: 'Something went wrong!' }),
+        JSON.stringify({ message: 'Something went wrongs!' }),
         { status: 500 }
       );
     }
@@ -73,28 +73,45 @@ export const GET = async (req:Request,  {params}:{params:IParams}) => {
 
 
 export async function PUT(
-    request:Request,
-    {params}:{params:IParams}
-){
-    const currentUser = await getCurrentUser()
-    const json = await request.json()
-
-    if(!currentUser) {
-        return NextResponse.error
+    request: Request,
+    { params }: { params: IParams }
+  ) {
+    const json = await request.json();
+  
+    const { blogId } = params;
+  
+    if (!blogId || typeof blogId !== 'string') {
+      throw new Error('Invalid Id');
     }
-    const {blogId} = params
-
-    if(!blogId || typeof blogId !== 'string'){
-       throw new Error('invalid Id')
-    }
-
-    const updated = await prisma.blog.update({
-        where:{
-            id:blogId,
+  
+    try {
+      // Retrieve the existing blog
+      const existingBlog = await prisma.blog.findUnique({
+        where: { id: blogId },
+      });
+  
+      if (!existingBlog) {
+        return new NextResponse(
+          JSON.stringify({ message: 'Blog not found' }),
+          { status: 404 }
+        );
+      }
+  
+      // Update the blog
+      const updatedBlog = await prisma.blog.update({
+        where: {
+          id: blogId,
         },
-        data:json
-
-    })
-
-    return NextResponse.json(updated)
-}
+        data: json,
+      });
+  
+      return NextResponse.json(updatedBlog);
+    } catch (error) {
+      console.error(error);
+      return new NextResponse(
+        JSON.stringify({ message: 'Something went wrong!' }),
+        { status: 500 }
+      );
+    }
+  }
+  
