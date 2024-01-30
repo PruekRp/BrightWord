@@ -8,7 +8,7 @@ const SinglePage = ({ params }) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [googleImage, setGoogleImage] = useState(null);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -56,7 +56,7 @@ const SinglePage = ({ params }) => {
   if (!data) {
     return (
       <div className="p-4">
-        <p className="text-red-500">Data not available for blog ID</p>
+        <p className="text-red-500">Loading...</p>
       </div>
     );
   }
@@ -105,7 +105,7 @@ const SinglePage = ({ params }) => {
           )}
         </div>
       </div>
-      <div className="flex flex-col p-5 text-gray-800">{parse(data.content)}</div>
+      <div className="prose prose-lg max-w-full mx-auto mt-10 text-gray-800">{parse(data.content)}</div>
     </>
   );
 };

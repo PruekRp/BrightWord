@@ -5,7 +5,6 @@ import Editor from "@/components/editor/Editor";
 const Write = () => {
   const [creating, setCreating] = useState(false);
 
-  
 
   const handleSubmit = async (post:any) => {
     console.log(post)
@@ -38,7 +37,6 @@ const Write = () => {
       <Editor
         onSubmit={handleSubmit}
         busy={creating}
-        
       />
     </div>
   );

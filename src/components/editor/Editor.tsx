@@ -1,53 +1,71 @@
+// Editor.tsx
 "use client";
-import React, { ChangeEventHandler, FC, useCallback, useEffect, useState } from "react";
+import React, {
+  ChangeEventHandler,
+  FC,
+  useEffect,
+  useState,
+} from "react";
 import { useEditor, EditorContent, Range, getMarkRange } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar/Toolbar";
-import Underline from "@tiptap/extension-underline";
-import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
-import EditLink from "./Link/EditLink";
 import TipTapImage from "@tiptap/extension-image";
-import Image from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
-import ThumbnailSelector from "./ThumbnailSelector";
-import Paragraph from "@tiptap/extension-paragraph";
-import ActionButton from "../ActionButton";
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { app } from "../../utils/firebase"
+import { app } from "../../utils/firebase";
+import classNames from "classnames";
+import ActionButton from "../ActionButton";
 
 export interface FinalPost {
   title: string;
   content: string;
-  slug:string;
+  slug: string;
   thumbnail?: File | string;
 }
 
 interface Props {
-  initialValue: FinalPost
-  btnTitle?:string
-  busy:boolean
-  onSubmit(post:FinalPost):void
+  initialValue: FinalPost;
+  btnTitle?: string;
+  busy: boolean;
+  onSubmit(post: FinalPost): void;
 }
 
-const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}): JSX.Element => {
+const commonClass =
+  "border border-dash border-zinc-500 flex items-center justify-center rounded cursor-pointer aspect-video";
+
+const PosterUI: FC<{ label: string; className?: string }> = ({
+  label,
+  className,
+}) => {
+  return (
+    <div className={classNames(commonClass, className)}>
+      <span>{label}</span>
+    </div>
+  );
+};
+
+const Editor: FC<Props> = ({
+  initialValue,
+  btnTitle = "Submit",
+  busy = false,
+  onSubmit,
+}): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
-  const [uploading, setUploading] = useState(false);
-  const [images, setImages] = useState<{ src: string }[]>([]);
-  const [slug,setInitialSlug] = useState<string>('');
+  const [selectedThumbnail, setSelectedThumbnail] = useState<string | File | null>("");
+  const [file, setFile] = useState<File | null>(null);
   const [post, setPost] = useState<FinalPost>({
     title: "",
     content: "",
     slug: "",
   });
-  
-  
 
+  
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -60,14 +78,6 @@ const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}
           target: "",
         },
       }),
-      Placeholder.configure({
-        placeholder: "Type something ....",
-      }),
-      TipTapImage.configure({
-        HTMLAttributes: {
-          class: "",
-        },
-      }),
       TextAlign.configure({
         types: ["paragraph"],
       }),
@@ -77,100 +87,134 @@ const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}
         const { state } = view;
         const selectionRange = getMarkRange(
           state.doc.resolve(pos),
-          state.schema.marks.link,
+          state.schema.marks.link
         );
         if (selectionRange) setSelectionRange(selectionRange);
       },
       attributes: {
-        class: "prose prose-lg focus:outline-none max-w-full mx-auto h-full",
+        class:
+          "prose prose-lg focus:outline-none max-w-full mx-auto h-full",
       },
     },
   });
-  const slugify = (str:string) => {
+  const slugify = (str: string) => {
     return str
-    .replace(/\s+/g,"-")
-            .replace(/[^\u0E00-\u0E7F\w\-]+/g,'')            
-            .replace(/\-\-+/g,'-')
-            .replace(/^-+/,'')
-            .toLowerCase();
-  } 
-  
+      .replace(/\s+/g, "-")
+      .replace(/[^\u0E00-\u0E7F\w\-]+/g, "")
+      .replace(/\-\-+/g, "-")
+      .replace(/^-+/, "")
+      .toLowerCase();
+  };
+
+  const [imageData, setImageData] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
+    const { files } = target;
+    if (!files) return;
+
+    const selectedFile = files[0];
+ 
+    setFile(selectedFile);
+    setSelectedThumbnail(URL.createObjectURL(selectedFile));
+  };
 
   const updateTitle: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const newTitle = target.value;
+    console.log(newTitle)
     const newSlug = slugify(newTitle);
     setPost({ ...post, title: newTitle, slug: newSlug });
   };
   
-  const updateThumbnail = (file:File) => {
-    setPost({...post,thumbnail:file})
-  }
-
-  const handleSubmit = () => {
-    if(!editor) return;
-    onSubmit({...post,content:editor.getHTML()})
-  }
-
+  const handleSubmit = () => {  
+    if (!editor || !file) {
+      setSubmitting(false);
+      console.error("Editor or file is not available.");
+      return;
+    }
+  
+    setSubmitting(true);
+  
+    const storage = getStorage(app);
+    const name = new Date().getTime() + file.name;
+    const storageRef = ref(storage, name);
+  
+    const uploadTask = uploadBytesResumable(storageRef, file);
+  
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+        }
+      },
+      (error) => {
+        setSubmitting(false);
+        console.error("Error uploading file:", error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageData(downloadURL);
+          onSubmit({ ...post, content: editor.getHTML(), thumbnail: downloadURL });
+          console.log(onSubmit)
+          setSubmitting(false);
+        });
+      }
+    );
+  };
   
   useEffect(() => {
     if (editor && selectionRange) {
       editor.commands.setTextSelection(selectionRange);
-      
     }
-  }, []);
+  }, [editor, selectionRange]);
 
-  useEffect(()=>{
-    if(initialValue){
-      setPost({...initialValue})
-      editor?.commands.setContent(initialValue.content)
-      const {slug} = initialValue
-      setInitialSlug(slug)
+  
+  useEffect(() => {
+    if (initialValue) {
+      setPost({ ...initialValue });
+      setSelectedThumbnail(initialValue.thumbnail || "");
+      editor?.commands.setContent(initialValue.content);
     }
-    const storage = getStorage(app);
-    const upload = () => {
-      const name = new Date().getTime() + file.name;
-      const storageRef = ref(storage, name);
-
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (error) => {},
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setMedia(downloadURL);
-          });
-        }
-      );
-    };
-
-  },[initialValue,editor])
+  }, [initialValue, editor]);
+  
 
   return (
     <div className="p-3 transition">
       <div className="sticky top-0 z-10 bg-bl"></div>
-      {/*Thumbnail Selector and Submit Button*/}
       <div className="flex items-center justify-between mb-3">
-        <ThumbnailSelector initialValue={post.thumbnail as string} onChange={updateThumbnail} />
+        <div className="w-40">
+          <input
+            type="file"
+            hidden
+            accept="image/jpg, image/png, image/jpeg"
+            id="thumbnail"
+            onChange={handleChange}
+          />
+          <label htmlFor="thumbnail">
+            {selectedThumbnail ? (
+              <img
+                src={selectedThumbnail}
+                alt=""
+                className={classNames(commonClass, "object-cover")}
+              />
+            ) : (
+              <PosterUI label="Thumbnail" />
+            )}
+          </label>
+        </div>
         <div>
-          <ActionButton busy={busy} title={btnTitle} onClick={handleSubmit} />
+          <ActionButton busy={busy || submitting} title={btnTitle} onClick={handleSubmit} />
         </div>
       </div>
-
-      {/*Title Input*/}
       <input
         type="text"
         className="py-5 outline-none bg-transparent w-full border-0 border-b-[1px] border-zinc-500 text-5xl font-semibold text-black mb-3"
@@ -178,10 +222,8 @@ const Editor: FC<Props> = ({initialValue, btnTitle='Submit',busy=false,onSubmit}
         onChange={updateTitle}
         value={post.title}
       />
-
       <Toolbar editor={editor} />
       <div className="h-[1px] w-full bg-black my-3" />
-      {editor ? <EditLink editor={editor} /> : null}
       <EditorContent editor={editor} className="min-h-[700px]" />
     </div>
   );

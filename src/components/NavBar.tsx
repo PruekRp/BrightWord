@@ -25,57 +25,65 @@ export default function NavBar() {
     signOut();
   };
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+    const toggleDropdown = () => {
+      setDropdownOpen(!isDropdownOpen);
+    };
 
-  if (status === "loading") {
+    
+
+    if (status === "loading") {
+      return (
+        <div className="animate-pulse fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-white text-5xl">
+      Loading... 
+        </div>
+      );
+    }
+    
+    console.log(data)
     return (
-      <div className="animate-pulse fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-white text-5xl">
-        Loading...
-      </div>
-    );
-  }
+       <div className="relative bg-black">
+        {/* Main Content */}
+        <div className="p-5  shadow-lg">
+          <div className="flex flex-wrap gap-3 items-center justify-between m-auto">
+            {/* Logo */}
+            <Link href="/">
+              <span className="font-bold text-2xl text-yellow-300 flex items-center gap-2">
+                BrightWord
+              </span>
+            </Link>
 
-  return (
-    <div className="relative">
-      {/* Loading Overlay */}
+            {/* Navbar Actions */}
+            <div className="flex items-center gap-4">
+              {data ? (
+                <div className="flex space-x-5 items-center">
+                  <AIChatButton />
+              
+                  <Link href="/write" className=" text-yellow-300 font-bold">write</Link>
 
-      {/* Main Content */}
-      <div className="p-4 shadow">
-        <div className="flex flex-wrap gap-3 items-center justify-between m-auto">
-          {/* Logo */}
-          <Link href="/">
-            <span className="font-bold text-2xl flex items-center gap-2">
-              BrightWord
-            </span>
-          </Link>
+                  {/* Profile Image */}
+                  <button
+                    onClick={toggleDropdown}
+                    className="focus:outline-none"
+                  >
+                    <Image
+                      src={data.user.image}
+                      width={30}
+                      height={35}
+                      alt="Profile Image"
+                      className="w-9 h-9 rounded-full cursor-pointer"
+                    />
+                  </button>
 
-          {/* Navbar Actions */}
-          <div className="flex items-center gap-4">
-            {data ? (
-              <div className="flex space-x-5">
-                <AIChatButton />
-                <Button>
-                  <Link href="/write">write</Link>
-                </Button>
-                {/* Profile Image */}
-                <button onClick={toggleDropdown} className="focus:outline-none">
-                  <Image
-                    src={data.user.image}
-                    width={30}
-                    height={35}
-                    alt="Profile Image"
-                    className="w-9 h-9 rounded-full cursor-pointer"
-                  />
-                </button>
-
-                {/* Dropdown */}
-                {isDropdownOpen && (
-                  <div className="absolute right-10 mt-11 bg-white border border-gray-200 rounded shadow-md">
-                    <div className="p-2">
-                      <p className="text-gray-700">{data.user?.name}</p>
-                      <p className="text-gray-500">{data.user?.email}</p>
+                  {/* Dropdown */}
+                  {isDropdownOpen && (
+                    <div className="absolute right-10 mt-40 bg-white border border-gray-200 rounded shadow-md">
+                      <div className="p-2">
+                        <p className="text-gray-700">{data.user?.name}</p>
+                        <p className="text-gray-500">{data.user?.email}</p>
+                      </div>
+                      <div className="p-2">
+                        <Button onClick={handleLogout}>Logout</Button>
+                      </div>
                     </div>
                     <div className="p-2">
                       <Button onClick={handleLogout}>Logout</Button>
