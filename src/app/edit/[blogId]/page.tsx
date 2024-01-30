@@ -17,7 +17,6 @@ const Edit = ({ params }) => {
         }
 
         const data = await res.json();
-        console.log(data)
         setBlogData(data);
       } catch (error) {
         console.error(error);
@@ -30,23 +29,36 @@ const Edit = ({ params }) => {
     
   }, [params.blogId]);
 
-  const handleSubmit = async (updatedPost:FinalPost) => {
-    console.log(updatedPost)
+  
+  const handleSubmit = async (updatedPost) => {
+    console.log('UpdatedPost: ', updatedPost);
+  
     try {
       setEditing(true);
-      console.log(updatedPost)
-      // Make a PUT request to update the blog post
-      const response = await fetch(`/api/blog/${params.blogId}`, {
+  
+      const { content, title, slug, thumbnail, createAt } = updatedPost;
+  
+      const response = await fetch(`/api/blog/${updatedPost.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedPost),
+        body: JSON.stringify({
+          content,
+          title,
+          slug,
+          thumbnail,
+          createAt,
+        }),
       });
-
+  
+      console.log('PUT Response:', response);
+  
       if (response.ok) {
         const data = await response.json();
         console.log("Blog post updated:", data);
+        // Update the local state with the updated data (if needed)
+        setBlogData(data);
       } else {
         console.error("Failed to update blog post");
       }
@@ -54,6 +66,7 @@ const Edit = ({ params }) => {
       setEditing(false);
     }
   };
+  
 
   if (loading) {
     return <p>Loading...</p>;

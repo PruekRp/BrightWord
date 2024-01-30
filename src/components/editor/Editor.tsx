@@ -114,7 +114,7 @@ const Editor: FC<Props> = ({
     if (!files) return;
 
     const selectedFile = files[0];
-    console.log("Files:", selectedFile);
+ 
     setFile(selectedFile);
     setSelectedThumbnail(URL.createObjectURL(selectedFile));
   };

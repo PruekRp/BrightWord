@@ -8,7 +8,7 @@ const SinglePage = ({ params }) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [googleImage, setGoogleImage] = useState(null);
-  console.log()
+  
   useEffect(() => {
     const fetchData = async () => {
       try {

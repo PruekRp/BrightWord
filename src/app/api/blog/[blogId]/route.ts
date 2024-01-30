@@ -77,7 +77,7 @@ export async function PUT(
     { params }: { params: IParams }
   ) {
     const json = await request.json();
-  
+      
     const { blogId } = params;
   
     if (!blogId || typeof blogId !== 'string') {
@@ -86,11 +86,11 @@ export async function PUT(
   
     try {
       // Retrieve the existing blog
-      const existingBlog = await prisma.blog.findUnique({
+      const blog = await prisma.blog.findUnique({
         where: { id: blogId },
       });
   
-      if (!existingBlog) {
+      if (!blog) {
         return new NextResponse(
           JSON.stringify({ message: 'Blog not found' }),
           { status: 404 }
