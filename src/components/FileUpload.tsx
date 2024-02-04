@@ -4,12 +4,14 @@ import { Button } from "./ui/button";
 import { getChunkedDocsFromPDF } from "@/lib/pdf-loader";
 import { embedAndStoreDocs } from "@/lib/vector-store";
 import { pdfIndex } from "@/lib/db/pinecone";
+import { useSession } from "next-auth/react";
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const {data} = useSession();
+  
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
@@ -39,7 +41,7 @@ export default function FileUpload() {
     try {
       const docs = await getChunkedDocsFromPDF(file);
       console.log(`Loading ${docs.length} chunks into pinecone...`);
-      await embedAndStoreDocs(docs);
+      await embedAndStoreDocs(data?.user.id,docs);
       console.log("Data embedded and stored in pine-cone index");
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -49,8 +51,8 @@ export default function FileUpload() {
   };
 
   const handleClearPinecone = async () => {
-    await pdfIndex.namespace("pdftext2").deleteAll();
-    console.log("Clear pinecone");
+    await pdfIndex.namespace(`id:${data?.user.id}`).deleteAll();
+    console.log(`Clear pinecone id:${data?.user.id}`);
   };
 
   return (

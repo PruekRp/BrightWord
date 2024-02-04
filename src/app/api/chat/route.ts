@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     const systemMessage: ChatCompletionMessage = {
       role: "assistant",
       content:
-       "You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf.\n" +
+       "You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf for create a content blog .\n" +
         "The relevant pdf for this query are:\n" +
         pineconeResponse,
     };
