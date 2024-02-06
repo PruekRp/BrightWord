@@ -2,8 +2,6 @@
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { pdfIndex } from "./db/pinecone";
 import { PineconeStore } from "@langchain/community/vectorstores/pinecone";
-import { getAuthSession } from "@/utils/auth";
-import { useSession } from "next-auth/react";
 
 export async function embedAndStoreDocs(
   id: string,
