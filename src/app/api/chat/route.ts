@@ -16,14 +16,14 @@ export async function POST(req: Request) {
 
     const embedding = await getEmbedding(inputText);
 
-    const vectorQueryResponse = await pdfIndex.namespace('pdftext2').query({
+    const vectorQueryResponse = await pdfIndex.namespace(`id:`).query({
       vector: embedding,
       topK: 4,
     });
 
     let pineconeResponse = "";
     if (vectorQueryResponse.matches.length > 0) {
-      const relevantPDF = vectorQueryResponse.matches[0];
+      const relevantPDF = vectorQueryResponse.matches;
       pineconeResponse = `Relevant PDF Content:\n${relevantPDF}`;
       console.log("relevantPDF Response:", relevantPDF);
     } else {

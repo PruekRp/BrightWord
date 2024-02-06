@@ -132,8 +132,3 @@ function ChatMessage({
   );
 }
 
-async function handleProcessPDF(event:React.FormEvent<HTMLFormElement>) {
-  event.preventDefault();
-  
-  
-}
