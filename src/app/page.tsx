@@ -8,17 +8,16 @@ import getCurrentUser from "./actions/getCurrentUser";
 import CardPost from "@/components/blog/CardPost";
 import { Suspense, useState } from "react";
 import CardList from "@/components/blog/CardList";
-import Loading from "./loading";
 
 export default function Home({ searchParams }: any) {
   const page = parseInt(searchParams.page) || 1;
- 
+
   return (
-    <main className="flex w-full">
-     <Suspense fallback='loadings'>
+    <section className="flex w-full">
+      <Suspense fallback="Loading..">
       <CardList page={page} />
       </Suspense>
       {/*<ChatPage/>*/}
-    </main>
+    </section>
   );
 }

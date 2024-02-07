@@ -1,6 +1,6 @@
 "use client";
 // Import necessary libraries
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import parse from "html-react-parser";
 import Image from "next/image";
 import Loading from "./loading";
@@ -8,7 +8,9 @@ import { SkeletonTheme } from "react-loading-skeleton";
 
 async function getBlogs({ params }) {
   try {
-    const response = await fetch(`http://localhost:3000/api/blog/${params.blogId}`);
+    const response = await fetch(
+      `http://localhost:3000/api/blog/${params.blogId}`,
+    );
     console.log(params.blogId);
     if (!response.ok) {
       throw new Error("Failed");
@@ -16,37 +18,40 @@ async function getBlogs({ params }) {
 
     return response.json();
   } catch (error) {
-    <p>Error</p>
+    <p>Error</p>;
   }
 }
+
 
 const SinglePage = ({ params }) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [googleImage, setGoogleImage] = useState(null);
-  console.log(data)
+  console.log(data);
   const initBlog = async () => {
     try {
-      const result =await getBlogs({params})
-      setData(result)
-    } catch (error){
-      console.log(error)
+      const result = await getBlogs({ params });
+      setData(result);
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
   useEffect(() => {
-    initBlog()
+    initBlog();
   }, []);
 
- 
- 
+  if(!data) return <Loading/>;
 
   return (
     <>
       <div className="flex mt-5 rounded-md mb-3 w-full">
         {/* Left Section */}
+        
         <div className="w-1/2 p-0 flex flex-col justify-between">
           {/* Title */}
-          <div className="text-3xl font-bold mb-28">{data?.title || <Loading/>}</div>
+          <div className="text-3xl font-bold mb-28">
+            {data?.title}
+          </div>
 
           {/* Author and Created At */}
           <div className="flex text-gray-600 ">
@@ -62,8 +67,8 @@ const SinglePage = ({ params }) => {
               </div>
             )}
             <div className="flex flex-col text-gray-600">
-              <p>By: {data?.userEmail|| <Loading/>}</p>
-              <p>{data?.createAt.substring(0, 10)|| <Loading/>}</p>
+              <p>By: {data?.userEmail}</p>
+              <p>{data?.createAt.substring(0, 10) }</p>
             </div>
           </div>
         </div>
@@ -92,9 +97,9 @@ const SinglePage = ({ params }) => {
       </div>
 
       <div className="prose prose-lg max-w-full mx-auto mt-10 text-gray-800">
-        {data && parse(data?.content)|| <Loading/>}
+        {(data && parse(data?.content))}
       </div>
-    </>
+    </>  
   );
 };
 
