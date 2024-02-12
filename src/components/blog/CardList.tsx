@@ -7,6 +7,7 @@ import Loading from "@/app/blogs/[blogId]/loading";
 
 function LoadingComponent() {
   return (
+    <>
     <div className="flex border-2 rounded-lg overflow-hidden shadow-md mb-4 w-full justify-between cursor-pointer transition duration-300 hover:shadow-xl">
       <div className="flex-1 p-4">
         <div className="flex justify-between items-start mb-2">
@@ -33,6 +34,33 @@ function LoadingComponent() {
         <div className="h-full w-full bg-gray-200 rounded"></div>
       </div>
     </div>
+    <div className="flex border-2 rounded-lg overflow-hidden shadow-md mb-4 w-full justify-between cursor-pointer transition duration-300 hover:shadow-xl">
+      <div className="flex-1 p-4">
+        <div className="flex justify-between items-start mb-2">
+          <div className="w-4/5">
+            <div className="h-6 bg-gray-200 rounded mb-3 animate-pulse"></div>
+            <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+          <div className="flex items-center gap-2 p-1">
+            <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+            <div className="w-6 h-6 bg-gray-200 rounded-full animate-pulse"></div>
+          </div>
+        </div>
+
+        <div className="h-12 bg-gray-200 rounded mb-2 animate-pulse"></div>
+        <div className="h-10 bg-gray-200 rounded mb-2 animate-pulse"></div>
+        <div className="h-6 bg-gray-200 rounded mb-2 animate-pulse"></div>
+
+        <div className="flex justify-between">
+          <div className="h-6 w-1/3 bg-gray-200 rounded mb-2 animate-pulse"></div>
+          <div className="h-6 w-1/4 bg-gray-200 rounded mb-2 animate-pulse"></div>
+        </div>
+      </div>
+      <div className="relative h-50 w-1/3">
+        <div className="h-full w-full bg-gray-200 rounded"></div>
+      </div>
+    </div>
+    </>
   );
 }
 
