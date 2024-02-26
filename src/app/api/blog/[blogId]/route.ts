@@ -45,8 +45,6 @@ export const GET = async (req:Request,  {params}:{params:IParams}) => {
         throw new Error('Invalid Id');
     }
 
-
-
     try {
         const blog = await prisma.blog.deleteMany({
             where: {
