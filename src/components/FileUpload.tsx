@@ -10,8 +10,7 @@ export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const {data} = useSession();
-  
+  const { data } = useSession();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
@@ -41,7 +40,7 @@ export default function FileUpload() {
     try {
       const docs = await getChunkedDocsFromPDF(file);
       console.log(`Loading ${docs.length} chunks into pinecone...`);
-      await embedAndStoreDocs(data?.user.id,docs);
+      await embedAndStoreDocs(data?.user.id, docs);
       console.log("Data embedded and stored in pine-cone index");
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -57,7 +56,7 @@ export default function FileUpload() {
 
   return (
     <div>
-      <label htmlFor="fromFile" >Upload PDF</label>
+      <label htmlFor="fromFile">Upload PDF</label>
       <div className="flex">
         <Input id="fromFile" type="file" onChange={handleFileChange} />
         <Button
@@ -68,7 +67,11 @@ export default function FileUpload() {
         >
           {uploading ? "Please wait..." : "Upload"}
         </Button>
-        <Button type="button" onClick={handleClearPinecone} className="ml-1 mr-1">
+        <Button
+          type="button"
+          onClick={handleClearPinecone}
+          className="ml-1 mr-1"
+        >
           Clear PDFs
         </Button>
       </div>

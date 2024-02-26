@@ -2,9 +2,16 @@ import { pdfIndex } from "@/lib/db/pinecone";
 import openai, { getEmbedding } from "@/lib/openai";
 import { ChatCompletionMessage } from "openai/resources/index.mjs";
 import { OpenAIStream, StreamingTextResponse } from "ai";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/utils/auth";
+
+export async function getSession() {
+  return await getServerSession(authOptions)
+}
 
 export async function POST(req: Request) {
   try {
+    const session = await getSession();
     const body = await req.json();
     const messages: ChatCompletionMessage[] = body.messages;
 
@@ -16,14 +23,20 @@ export async function POST(req: Request) {
 
     const embedding = await getEmbedding(inputText);
 
-    const vectorQueryResponse = await pdfIndex.namespace(`id:`).query({
-      vector: embedding,
-      topK: 4,
-    });
+    console.log(`id:${session?.user.id}`)
+
+    const vectorQueryResponse = await pdfIndex
+      .namespace(`id:${session?.user.id}`)
+      .query({
+        vector: embedding,
+        topK: 4,
+        includeMetadata: true
+      });
 
     let pineconeResponse = "";
+    
     if (vectorQueryResponse.matches.length > 0) {
-      const relevantPDF = vectorQueryResponse.matches;
+      const relevantPDF = vectorQueryResponse.matches.map((match) => match.metadata?.text).join(" ");
       pineconeResponse = `Relevant PDF Content:\n${relevantPDF}`;
       console.log("relevantPDF Response:", relevantPDF);
     } else {
@@ -33,7 +46,7 @@ export async function POST(req: Request) {
     const systemMessage: ChatCompletionMessage = {
       role: "assistant",
       content:
-       "You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf for create a content blog .\n" +
+        "Your name is BrightWordBot. You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf for create a content blog .\n" +
         "The relevant pdf for this query are:\n" +
         pineconeResponse,
     };
