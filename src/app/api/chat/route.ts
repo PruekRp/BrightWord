@@ -34,14 +34,10 @@ export async function POST(req: Request) {
       });
 
     let pineconeResponse = "";
-    
-    if (vectorQueryResponse.matches.length > 0) {
-      const relevantPDF = vectorQueryResponse.matches.map((match) => match.metadata?.text).join(" ");
-      pineconeResponse = `Relevant PDF Content:\n${relevantPDF}`;
-      console.log("relevantPDF Response:", relevantPDF);
-    } else {
-      pineconeResponse = "No relevant PDF found.";
-    }
+    const relevantPDF = vectorQueryResponse.matches.map((match) => match.metadata?.text).join(" ");
+    pineconeResponse = `Relevant PDF Content:\n${relevantPDF}`;
+    // console.log("relevantPDF Response:", relevantPDF);
+   
 
     const systemMessage: ChatCompletionMessage = {
       role: "assistant",
@@ -59,11 +55,11 @@ export async function POST(req: Request) {
       messages: openaiMessages,
     });
 
-    console.log("OpenAI API Response:", response);
-    console.log("System Message:", systemMessage);
-    console.log("Embedding from OpenAI:", embedding);
-    console.log("Messages to OpenAI API:", openaiMessages);
-    console.log("Pinecone Results in System Message:", pineconeResponse);
+    // console.log("OpenAI API Response:", response);
+    // console.log("System Message:", systemMessage);
+    // console.log("Embedding from OpenAI:", embedding);
+    // console.log("Messages to OpenAI API:", openaiMessages);
+    // console.log("Pinecone Results in System Message:", pineconeResponse);
 
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);

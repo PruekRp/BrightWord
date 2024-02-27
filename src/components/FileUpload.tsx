@@ -1,3 +1,4 @@
+"use client";
 import { ChangeEvent, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -5,6 +6,7 @@ import { getChunkedDocsFromPDF } from "@/lib/pdf-loader";
 import { embedAndStoreDocs } from "@/lib/vector-store";
 import { pdfIndex } from "@/lib/db/pinecone";
 import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 export default function FileUpload() {
   const [file, setFile] = useState<File | null>(null);
@@ -47,11 +49,19 @@ export default function FileUpload() {
     } finally {
       setUploading(false);
     }
+    toast.success('Upload Success!')
   };
 
   const handleClearPinecone = async () => {
-    await pdfIndex.namespace(`id:${data?.user.id}`).deleteAll();
-    console.log(`Clear pinecone id:${data?.user.id}`);
+    try {
+      await pdfIndex.namespace(`id:${data?.user.id}`).deleteAll();
+      console.log(`Clear pinecone id:${data?.user.id}`);
+      toast.success('Clear PDFs Success!')
+    } catch (error) {
+      console.error("No PDFs")
+      toast.error('No PDFs')
+    }
+    
   };
 
   return (
