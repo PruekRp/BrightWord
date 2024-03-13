@@ -64,7 +64,7 @@ const Editor: FC<Props> = ({
     content: "",
     slug: "",
   });
-
+  console.log(post)
   
   const editor = useEditor({
     extensions: [

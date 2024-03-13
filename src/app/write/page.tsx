@@ -7,7 +7,7 @@ const Write = () => {
 
 
   const handleSubmit = async (post:any) => {
-    console.log(post)
+    console.log('sdfdsf',post)
     try {
       setCreating(true);
 

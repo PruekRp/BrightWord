@@ -62,9 +62,10 @@ model Blog {
   content   String
   slug      String
   thumbnail String?
-  userEmail String
-  user      User      @relation(fields: [userEmail], references: [email])
-  createAt  DateTime @default(now())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  createAt  DateTime     @default(now())
+  status    String       @default("draft") // เพิ่มฟิลด์ "status" และกำหนดค่าเริ่มต้นเป็น "draft"
 }
 
 

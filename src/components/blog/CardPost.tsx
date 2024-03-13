@@ -13,7 +13,8 @@ const CardPost = ({ key, item }: any) => {
   const { data: session } = useSession();
   const currentUser = getCurrentUser();
   const router = useRouter();
-  const handleDelete = async (postId) => {
+  console.log(item)
+  const handleDelete = async (postId:any) => {
     try {
       //Set deleting to true to show loading state
       setDelete(true);
@@ -47,8 +48,8 @@ const CardPost = ({ key, item }: any) => {
           <Link href={`/blogs/${item.id}`}>
             <h1 className="text-2xl font-bold mb-3">{item.title}</h1>
           </Link>
-
-          {session?.user?.email === item.userEmail && (
+        
+          {session?.user?.email === item.user.email && (
             <div className="flex items-center gap-2 p-1">
               <Link href={`/edit/${item.id}`}>
                 <FaEdit className="text-orange-500 cursor-pointer ml-2 hover:text-orange-700 size-6" />
@@ -72,7 +73,7 @@ const CardPost = ({ key, item }: any) => {
           </span>
         </Link>
         <div className="mt-7 text-gray-500 flex justify-between">
-          <div>By {item.userEmail}</div>
+          <div>By {item.user.email}</div>
           <div> {item.createAt.substring(0, 10)}</div>
         </div>
       </div>

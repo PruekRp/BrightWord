@@ -15,6 +15,7 @@ export const GET = async (req:Request) => {
     take: 2,
     skip: POST_PER_PAGE * (page - 1),
     orderBy: { createAt: "desc" }, // เรียงลำดับบทความตามวันที่ล่าสุด
+    include: { user: { select: { email: true } } }
   };
 
 
@@ -22,6 +23,7 @@ export const GET = async (req:Request) => {
     const [blog, count] = await prisma.$transaction([
       prisma.blog.findMany(query),
       prisma.blog.count({ where: query.where }),
+      
     ]);
     return new NextResponse(JSON.stringify({ blog, count }, { status: 200 }));
   } catch (err) {
@@ -44,7 +46,7 @@ export const POST = async (req:Request) => {
     try {
       const body = await req.json();
       const blog = await prisma.blog.create({
-        data: { ...body, userEmail: session.user?.email },
+        data: { ...body, userId: session.user?.id },
       });
       
       return new NextResponse(JSON.stringify(blog, { status: 200 }));
