@@ -27,6 +27,7 @@ export interface FinalPost {
   content: string;
   slug: string;
   thumbnail?: File | string;
+  status:string
 }
 
 interface Props {
@@ -52,7 +53,7 @@ const PosterUI: FC<{ label: string; className?: string }> = ({
 
 const Editor: FC<Props> = ({
   initialValue,
-  btnTitle = "Submit",
+  btnTitle = "Publish",
   busy = false,
   onSubmit,
 }): JSX.Element => {
@@ -63,6 +64,7 @@ const Editor: FC<Props> = ({
     title: "",
     content: "",
     slug: "",
+    status:""
   });
   console.log(post)
   
@@ -126,7 +128,7 @@ const Editor: FC<Props> = ({
     setPost({ ...post, title: newTitle, slug: newSlug });
   };
   
-  const handleSubmit = () => {  
+  const handlePublished = () => {  
     if (!editor || !file) {
       setSubmitting(false);
       console.error("Editor or file is not available.");
@@ -163,7 +165,7 @@ const Editor: FC<Props> = ({
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageData(downloadURL);
-          onSubmit({ ...post, content: editor.getHTML(), thumbnail: downloadURL });
+          onSubmit({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'published' });
           console.log(onSubmit)
           setSubmitting(false);
         });
@@ -171,6 +173,8 @@ const Editor: FC<Props> = ({
     );
   };
   
+  //!!ไม่ยากเอา handlePublished มาเปลี่ยน handleDraft สร้างปุ่มกด Draft เพื่อให้ status ยัง draft ไว้
+
   useEffect(() => {
     if (editor && selectionRange) {
       editor.commands.setTextSelection(selectionRange);
@@ -212,7 +216,7 @@ const Editor: FC<Props> = ({
           </label>
         </div>
         <div>
-          <ActionButton busy={busy || submitting} title={btnTitle} onClick={handleSubmit} />
+          <ActionButton busy={busy || submitting} title={btnTitle} onClick={handlePublished} />
         </div>
       </div>
       <input

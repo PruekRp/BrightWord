@@ -30,7 +30,7 @@ const Edit = ({ params }) => {
   }, [params.blogId]);
 
   
-  const handleSubmit = async (updatedPost) => {
+  const handlePublished = async (updatedPost) => {
     console.log('UpdatedPost: ', updatedPost);
   
     try {
@@ -75,10 +75,10 @@ const Edit = ({ params }) => {
   return (
     <div>
       <Editor
-        onSubmit={handleSubmit}
+        onSubmit={handlePublished}
         initialValue={blogData}
         busy={editing}
-        btnTitle="Update"
+        btnTitle="Publish"
       />
     </div>
   );

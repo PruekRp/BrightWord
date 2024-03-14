@@ -34,26 +34,3 @@ export const GET = async (req:Request) => {
   }
 };
 
-// CREATE A POST METHOD
-export const POST = async (req:Request) => {
-    const session = await getAuthSession();
-  
-    if (!session) {
-      return new NextResponse(
-        JSON.stringify({ message: "Not Authenticated!" }, { status: 401 })
-      );
-    }
-    try {
-      const body = await req.json();
-      const blog = await prisma.blog.create({
-        data: { ...body, userId: session.user?.id },
-      });
-      
-      return new NextResponse(JSON.stringify(blog, { status: 200 }));
-    } catch (err) {
-      console.log(err);
-      return new NextResponse(
-        JSON.stringify({ message: "Something went wrong!" }, { status: 500 })
-      );
-    }
-  };
