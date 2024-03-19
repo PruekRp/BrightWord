@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Pagination from "./Pagination";
-import Image from "next/image";
+
 import CardPost from "./CardPost";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton"; // Import Skeleton
-import Loading from "@/app/blogs/[blogId]/loading";
 
 function LoadingComponent() {
   return (
@@ -65,9 +63,10 @@ function LoadingComponent() {
 }
 
 
-const getData = async (page:any) => {
+const getData = async (page:any, isStatus:any) => {
+  const statusParam = isStatus ? `&status=${isStatus}` : '';
   const res = await fetch(
-    `http://localhost:3000/api/blog?page=${page}`,
+    `http://localhost:3000/api/blog?page=${page}${statusParam}`,
     {
       cache: "no-store",
     }
@@ -80,7 +79,7 @@ const getData = async (page:any) => {
   return res.json();
 };
 
-const CardList = ({ page }:any) => {
+const CardList = ({ isStatus,page }:any) => {
   const [blogData, setBlogData] = useState([]);
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -92,7 +91,7 @@ const CardList = ({ page }:any) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { blog, count } = await getData(page);
+        const { blog, count } = await getData(page,isStatus);
         setBlogData(blog);
         setCount(count);
         setLoading(false);
@@ -100,10 +99,9 @@ const CardList = ({ page }:any) => {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, [page]);
-
+  
   return (
     <div className="w-full">
       <h1 className="font-bold p-2 my-5 text-6xl"> Embarking on a Journey of Wisdom </h1>

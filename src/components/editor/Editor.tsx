@@ -1,23 +1,12 @@
 // Editor.tsx
-"use client";
-import React, {
-  ChangeEventHandler,
-  FC,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEventHandler, FC, useEffect, useState } from "react";
 import { useEditor, EditorContent, Range, getMarkRange } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar/Toolbar";
 import Link from "@tiptap/extension-link";
 import TipTapImage from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { app } from "../../utils/firebase";
 import classNames from "classnames";
 import ActionButton from "../ActionButton";
@@ -27,7 +16,7 @@ export interface FinalPost {
   content: string;
   slug: string;
   thumbnail?: File | string;
-  status:string
+  status: string;
 }
 
 interface Props {
@@ -40,10 +29,7 @@ interface Props {
 const commonClass =
   "border border-dash border-zinc-500 flex items-center justify-center rounded cursor-pointer aspect-video";
 
-const PosterUI: FC<{ label: string; className?: string }> = ({
-  label,
-  className,
-}) => {
+const PosterUI: FC<{ label: string; className?: string }> = ({ label, className }) => {
   return (
     <div className={classNames(commonClass, className)}>
       <span>{label}</span>
@@ -64,10 +50,9 @@ const Editor: FC<Props> = ({
     title: "",
     content: "",
     slug: "",
-    status:""
+    status: ""
   });
-  console.log(post)
-  
+  console.log(initialValue)
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -99,6 +84,7 @@ const Editor: FC<Props> = ({
       },
     },
   });
+
   const slugify = (str: string) => {
     return str
       .replace(/\s+/g, "-")
@@ -114,22 +100,20 @@ const Editor: FC<Props> = ({
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const { files } = target;
     if (!files) return;
-
     const selectedFile = files[0];
- 
     setFile(selectedFile);
     setSelectedThumbnail(URL.createObjectURL(selectedFile));
   };
 
   const updateTitle: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const newTitle = target.value;
-    console.log(newTitle)
     const newSlug = slugify(newTitle);
     setPost({ ...post, title: newTitle, slug: newSlug });
   };
+ 
   
-  const handlePublished = () => {  
-    if (!editor || !file) {
+  const handlePublished = () => {
+    if (!editor) {
       setSubmitting(false);
       console.error("Editor or file is not available.");
       return;
@@ -137,44 +121,97 @@ const Editor: FC<Props> = ({
   
     setSubmitting(true);
   
-    const storage = getStorage(app);
-    const name = new Date().getTime() + file.name;
-    const storageRef = ref(storage, name);
+    if (file) {
+      const storage = getStorage(app);
+      const name = new Date().getTime() + file.name;
+      const storageRef = ref(storage, name);
   
-    const uploadTask = uploadBytesResumable(storageRef, file);
+      const uploadTask = uploadBytesResumable(storageRef, file);
   
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-        }
-      },
-      (error) => {
-        setSubmitting(false);
-        console.error("Error uploading file:", error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImageData(downloadURL);
-          onSubmit({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'published' });
-          console.log(onSubmit)
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
           setSubmitting(false);
-        });
-      }
-    );
+          console.error("Error uploading file:", error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageData(downloadURL);
+            onSubmit({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'published' });
+            setSubmitting(false);
+          });
+        }
+      );
+    } else {
+      console.log(onSubmit)
+      onSubmit({ ...post, content: editor.getHTML(), status: 'published' });
+      setSubmitting(false);
+    }
+  };
+
+  const handleDraft = () => {
+    if (!editor) {
+      setSubmitting(false);
+      console.error("Editor or file is not available.");
+      return;
+    }
+    if (!file) {
+      console.error("No file selected.");
+    }
+  
+    setSubmitting(true);
+  
+    if (file) {
+      const storage = getStorage(app);
+      const name = new Date().getTime() + file.name;
+      const storageRef = ref(storage, name);
+  
+      const uploadTask = uploadBytesResumable(storageRef, file);
+  
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          setSubmitting(false);
+          console.error("Error uploading file:", error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageData(downloadURL);
+            onSubmit({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'draft' });
+            setSubmitting(false);
+          });
+        }
+      );
+    } else {
+      onSubmit({ ...post, content: editor.getHTML(), status: 'draft' });
+      setSubmitting(false);
+    }
   };
   
-  //!!ไม่ยากเอา handlePublished มาเปลี่ยน handleDraft สร้างปุ่มกด Draft เพื่อให้ status ยัง draft ไว้
-
   useEffect(() => {
     if (editor && selectionRange) {
       editor.commands.setTextSelection(selectionRange);
@@ -216,6 +253,7 @@ const Editor: FC<Props> = ({
           </label>
         </div>
         <div>
+          <ActionButton busy={busy || submitting} title="Draft" onClick={handleDraft} />
           <ActionButton busy={busy || submitting} title={btnTitle} onClick={handlePublished} />
         </div>
       </div>

@@ -49,6 +49,7 @@ const Edit = ({ params }) => {
           slug,
           thumbnail,
           createAt,
+          status:'published'
         }),
       });
   

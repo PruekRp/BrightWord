@@ -11,9 +11,9 @@ import "react-toastify/dist/ReactToastify.css";
 const CardPost = ({ key, item }: any) => {
   const [deleting, setDelete] = useState(false);
   const { data: session } = useSession();
-  const currentUser = getCurrentUser();
+  console.log('item',item)
   const router = useRouter();
-  console.log(item)
+
   const handleDelete = async (postId:any) => {
     try {
       //Set deleting to true to show loading state
@@ -46,9 +46,13 @@ const CardPost = ({ key, item }: any) => {
       <div className="flex-1 p-4">
         <div className="flex justify-between items-start mb-2">
           <Link href={`/blogs/${item.id}`}>
-            <h1 className="text-2xl font-bold mb-3">{item.title}</h1>
+            <div className="flex justify-center items-center">
+            <h1 className="text-2xl font-bold mb-3">{item.title}</h1><h5 className={`text-xl ml-5 mb-3 ${item.status === 'published' ? 'text-green-500' : 'text-zinc-500'}`}>
+  ({item.status})
+</h5>
+
+            </div>
           </Link>
-        
           {session?.user?.email === item.user.email && (
             <div className="flex items-center gap-2 p-1">
               <Link href={`/edit/${item.id}`}>

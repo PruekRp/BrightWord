@@ -13,7 +13,8 @@ export const GET = async (req:Request,  {params}:{params:IParams}) => {
     try {
       const blog = await prisma.blog.findMany({
         where: { userId },
-        include: { user: { select: { email: true } } }
+        include: { user: { select: { email: true } } },
+        orderBy:{createAt:'desc'}
       });
   
       if (!blog) {

@@ -4,7 +4,7 @@ import Image from "next/image";
 import CardPost from "@/components/blog/CardPost";
 import Loading from "@/app/blogs/[blogId]/loading";
 
-function LoadingComponent() {
+ const LoadingComponent = () => {
   return (
     <>
       <div className="flex border-2 rounded-lg overflow-hidden shadow-md mb-4 w-full justify-between cursor-pointer transition duration-300 hover:shadow-xl">
@@ -105,7 +105,7 @@ const BlogUser = ({ params }: any) => {
         <h1 className="font-bold p-2 my-5 text-6xl">Your blog</h1>
         {/* เพิ่มปุ่มสำหรับเปลี่ยนสถานะการแสดงบล็อก */}
         <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
-          <ul className="flex flex-wrap -mb-px">
+          <ul className="flex flex-wrap-mb-px">
             <li className={`me-2`}>
               <a
                 href="#"
