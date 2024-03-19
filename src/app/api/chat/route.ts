@@ -36,13 +36,13 @@ export async function POST(req: Request) {
     let pineconeResponse = "";
     const relevantPDF = vectorQueryResponse.matches.map((match) => match.metadata?.text).join(" ");
     pineconeResponse = `Relevant PDF Content:\n${relevantPDF}`;
-    // console.log("relevantPDF Response:", relevantPDF);
+    console.log("relevantPDF Response:", relevantPDF);
    
 
     const systemMessage: ChatCompletionMessage = {
       role: "assistant",
       content:
-        "Your name is BrightWordBot. You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf for create a content blog .\n" +
+        "You are a man. Your name is BrightWordBot. You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf for help create a blog .\n" +
         "The relevant pdf for this query are:\n" +
         pineconeResponse,
     };
