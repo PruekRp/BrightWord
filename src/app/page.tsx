@@ -15,7 +15,7 @@ export default function Home({ searchParams }: any) {
   return (
     <section className="flex w-full">
       <Suspense fallback="Loading..">
-        {/*เอา CardList component ออกมาใช้หน้านี้ต่างหาก ให้ useEffect ทำงาน*/}
+      
       <CardList page={page} />
       </Suspense>
       {/*<ChatPage/>*/}

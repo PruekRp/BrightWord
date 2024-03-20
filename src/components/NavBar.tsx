@@ -3,7 +3,6 @@ import AIChatButton from "@/components/AIChatButton";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import Image from "next/image";
-import logoImage from "C:\\Users\\User\\Desktop\\Project\\test-nextjs-chatbox\\public\\logo.jpg";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { FaGoogle } from "react-icons/fa"; // Import Google ico
 import { useRouter } from "next/navigation"; // import useRouter
@@ -91,7 +90,7 @@ export default function NavBar() {
           {/* Navbar Actions */}
           <div className="flex items-center gap-4">
             <AIChatButton />
-            <button>
+            <Button>
               <span
                 className="text-yellow-300 font-bold cursor-pointer"
                 onClick={handleWriteClick}
@@ -103,16 +102,18 @@ export default function NavBar() {
                   <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-yellow-300"></div>
                 </div>
               )}
-            </button>
+            </Button>
 
             {data ? (
               <div className="flex space-x-5 items-center">
+                <Button>
                 <Link
                   href={`/blogUser/${data?.user.id}`}
                   className=" text-yellow-300 font-bold"
                 >
                   My blogs
                 </Link>
+                </Button>
                 {/* Profile Image */}
                 <button onClick={toggleDropdown} className="focus:outline-none">
                   <Image

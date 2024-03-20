@@ -23,7 +23,8 @@ interface Props {
   initialValue: FinalPost;
   btnTitle?: string;
   busy: boolean;
-  onSubmit(post: FinalPost): void;
+  onPublish(post: FinalPost): void;
+  onDraft(post:FinalPost) :void;
 }
 
 const commonClass =
@@ -41,7 +42,8 @@ const Editor: FC<Props> = ({
   initialValue,
   btnTitle = "Publish",
   busy = false,
-  onSubmit,
+  onPublish,
+  onDraft
 }): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
   const [selectedThumbnail, setSelectedThumbnail] = useState<string | File | null>("");
@@ -149,14 +151,14 @@ const Editor: FC<Props> = ({
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageData(downloadURL);
-            onSubmit({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'published' });
+            onPublish({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'published' });
             setSubmitting(false);
           });
         }
       );
     } else {
-      console.log(onSubmit)
-      onSubmit({ ...post, content: editor.getHTML(), status: 'published' });
+      console.log(onPublish)
+      onPublish({ ...post, content: editor.getHTML(), status: 'published' });
       setSubmitting(false);
     }
   };
@@ -201,13 +203,13 @@ const Editor: FC<Props> = ({
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageData(downloadURL);
-            onSubmit({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'draft' });
+            onDraft({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'draft' });
             setSubmitting(false);
           });
         }
       );
     } else {
-      onSubmit({ ...post, content: editor.getHTML(), status: 'draft' });
+      onDraft({ ...post, content: editor.getHTML(), status: 'draft' });
       setSubmitting(false);
     }
   };
@@ -252,7 +254,8 @@ const Editor: FC<Props> = ({
             )}
           </label>
         </div>
-        <div>
+        <div className="flex">
+          {/*แก้เรื่อง animation spin ด้วย */}
           <ActionButton busy={busy || submitting} title="Draft" onClick={handleDraft} />
           <ActionButton busy={busy || submitting} title={btnTitle} onClick={handlePublished} />
         </div>
