@@ -4,9 +4,9 @@ import { useState, useEffect, Suspense } from "react";
 import parse from "html-react-parser";
 import Image from "next/image";
 import Loading from "./loading";
-import { SkeletonTheme } from "react-loading-skeleton";
 
-async function getBlogs({ params }) {
+
+async function getBlogs({ params }:any) {
   try {
     const response = await fetch(
       `http://localhost:3000/api/blog/${params.blogId}`,
@@ -23,8 +23,8 @@ async function getBlogs({ params }) {
 }
 
 
-const SinglePage = ({ params }) => {
-  const [data, setData] = useState(null);
+const SinglePage = ({ params }:any) => {
+  const [data, setData] = useState<any>(null);
   const [error, setError] = useState(null);
   const [googleImage, setGoogleImage] = useState(null);
   console.log(data);

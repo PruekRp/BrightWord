@@ -1,12 +1,13 @@
 'use client'
 import { useState, useEffect } from "react";
 import Editor, { FinalPost } from "@/components/editor/Editor";
-
-const Edit = ({ params }) => {
+import { useRouter } from 'next/navigation'
+const Edit = ({ params }:any) => {
   const [editing, setEditing] = useState(false);
   const [blogData, setBlogData] = useState({});
   const [loading, setLoading] = useState(true);
   
+  const router = useRouter()
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
@@ -24,13 +25,12 @@ const Edit = ({ params }) => {
         setLoading(false);
       }
     };
-
     fetchBlogData();
     
   }, [params.blogId]);
 
   
-  const handleSubmit = async (updatedPost) => {
+  const handlePublished = async (updatedPost:any) => {
     console.log('UpdatedPost: ', updatedPost);
   
     try {
@@ -49,6 +49,7 @@ const Edit = ({ params }) => {
           slug,
           thumbnail,
           createAt,
+          status:'published'
         }),
       });
   
@@ -64,6 +65,46 @@ const Edit = ({ params }) => {
       }
     } finally {
       setEditing(false);
+      router.push('/')
+    }
+  };
+
+  const handleDraft = async (updatedPost:any) => {
+    console.log('UpdatedPost: ', updatedPost);
+  
+    try {
+      setEditing(true);
+  
+      const { content, title, slug, thumbnail, createAt } = updatedPost;
+  
+      const response = await fetch(`/api/blog/${updatedPost.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content,
+          title,
+          slug,
+          thumbnail,
+          createAt,
+          status:'draft'
+        }),
+      });
+  
+      console.log('PUT Response:', response);
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Blog post updated:", data);
+        // Update the local state with the updated data (if needed)
+        setBlogData(data);
+      } else {
+        console.error("Failed to update blog post");
+      }
+    } finally {
+      setEditing(false);
+
     }
   };
   
@@ -75,10 +116,11 @@ const Edit = ({ params }) => {
   return (
     <div>
       <Editor
-        onSubmit={handleSubmit}
+        onPublish={handlePublished}
+        onDraft={handleDraft}
         initialValue={blogData}
         busy={editing}
-        btnTitle="Update"
+        btnTitle="Publish"
       />
     </div>
   );
