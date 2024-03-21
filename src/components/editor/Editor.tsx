@@ -46,7 +46,7 @@ const Editor: FC<Props> = ({
   onDraft
 }): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
-  const [selectedThumbnail, setSelectedThumbnail] = useState<string | File | null>("");
+  const [selectedThumbnail, setSelectedThumbnail] = useState<any>("");
   const [file, setFile] = useState<File | null>(null);
   const [post, setPost] = useState<FinalPost>({
     title: "",

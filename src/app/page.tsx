@@ -15,7 +15,6 @@ export default function Home({ searchParams }: any) {
   return (
     <section className="flex w-full">
       <Suspense fallback="Loading..">
-      
       <CardList page={page} />
       </Suspense>
       {/*<ChatPage/>*/}

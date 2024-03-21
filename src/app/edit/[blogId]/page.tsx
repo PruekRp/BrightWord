@@ -2,9 +2,11 @@
 import { useState, useEffect } from "react";
 import Editor, { FinalPost } from "@/components/editor/Editor";
 import { useRouter } from 'next/navigation'
+
+
 const Edit = ({ params }:any) => {
   const [editing, setEditing] = useState(false);
-  const [blogData, setBlogData] = useState({});
+  const [blogData, setBlogData] = useState<any>({});
   const [loading, setLoading] = useState(true);
   
   const router = useRouter()
@@ -31,7 +33,7 @@ const Edit = ({ params }:any) => {
 
   
   const handlePublished = async (updatedPost:any) => {
-    console.log('UpdatedPost: ', updatedPost);
+    console.log('published: ', updatedPost);
   
     try {
       setEditing(true);
@@ -70,7 +72,7 @@ const Edit = ({ params }:any) => {
   };
 
   const handleDraft = async (updatedPost:any) => {
-    console.log('UpdatedPost: ', updatedPost);
+    console.log('draft: ', updatedPost);
   
     try {
       setEditing(true);
@@ -104,7 +106,7 @@ const Edit = ({ params }:any) => {
       }
     } finally {
       setEditing(false);
-
+      router.push('/')
     }
   };
   
