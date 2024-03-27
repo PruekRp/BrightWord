@@ -4,17 +4,15 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowRight, FaTrashAlt, FaEdit } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CardPost = ({ key, item }: any) => {
   const [deleting, setDelete] = useState(false);
   const { data: session } = useSession();
-  console.log("item", item);
-  const router = useRouter();
-
+  const [postDeleted, setPostDeleted] = useState(false);
   const handleDelete = async (postId: any) => {
     try {
       //Set deleting to true to show loading state
@@ -28,6 +26,8 @@ const CardPost = ({ key, item }: any) => {
       if (response.ok) {
         // Handle successful deletion here, such as updating UI or redirecting
         console.log(`Post with ID ${postId} deleted successfully`);
+        // ตั้งค่า State เพื่อสั่งให้ Component โหลดใหม่
+        setPostDeleted(true);
       } else {
         // Handle error cases
         console.error("Failed to delete post");
@@ -35,11 +35,9 @@ const CardPost = ({ key, item }: any) => {
     } catch (error) {
       console.error("Error deleting blog: ", error);
     } finally {
-      //Set deleting to false and push home router
-      router.push("/");
+      console.log('success')
     }
   };
-
   return (
     <>
       {item.status === "published" ? (
@@ -120,6 +118,7 @@ const CardPost = ({ key, item }: any) => {
             : `/edit/${item.id}`
         }
       >
+        
         <div
           className="flex border-2 rounded-lg overflow-hidden shadow-md mb-4 w-100 justify-between cursor-pointer transition duration-300 hover:shadow-xl"
           key={key}
@@ -134,10 +133,14 @@ const CardPost = ({ key, item }: any) => {
                       item.status === "draft" ? "text-zinc-500" : ""
                     }`}
                   >
+                    
                     ({item.status})
                   </h5>
                 </div>
-             
+                <FaTrashAlt
+                    className="text-red-500 cursor-pointer hover:text-red-700 size-5"
+                    onClick={() => handleDelete(item.id)}
+                  />
             </div>
             <div
               className="text-gray-700 mb-2 ml-1"
@@ -164,6 +167,7 @@ const CardPost = ({ key, item }: any) => {
         </div>
         </Link>
       )}
+        <ToastContainer />
     </>
   );
 };

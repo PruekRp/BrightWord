@@ -100,7 +100,7 @@ const CardList = ({ isStatus,page }:any) => {
       }
     };
     fetchData();
-  }, [page]);
+  }, [page,blogData]);
   
   return (
     <div className="w-full">
