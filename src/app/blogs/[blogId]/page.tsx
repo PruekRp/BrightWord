@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import parse from "html-react-parser";
 import Image from "next/image";
 import Loading from "./loading";
+import AudioPlayer from "@/components/AudioPlayer";
 
 async function getBlogs({ params }: any) {
   try {
@@ -62,13 +63,19 @@ const SinglePage = ({ params }: any) => {
                 />
               </div>
             )}
+            
             <div className="flex flex-col text-gray-600">
               <p>By: {data?.userEmail}</p>
               <p>{data?.createAt.substring(0, 10)}</p>
+              
             </div>
+            
+            <AudioPlayer src={data.audio} />
+         
           </div>
+          
         </div>
-
+      
         {/* Right Section */}
         <div className="relative h-64 w-1/2">
           {/* Image */}
@@ -84,14 +91,6 @@ const SinglePage = ({ params }: any) => {
         </div>
       </div>
       {/* please add html audio with style tailwindcss */}
-
-      <div className="mt-0">
-        <audio controls className="w-full bg-gray-100 rounded-md">
-          {/* ตั้งค่า src เป็น URL ของไฟล์เสียง */}
-          <source src={data.audio} type="audio/mp3" />
-          Your browser does not support the audio element.
-        </audio>
-      </div>
 
       <div className="prose prose-lg max-w-full mx-auto mt-10 text-gray-800">
         {data && parse(data?.content)}

@@ -59,7 +59,7 @@ const CardPost = ({ key, item }: any) => {
                   <h5
                     className={`text-xl ml-5 mb-3 ${
                       item.status === "published"
-                        ? "text-green-300"
+                        ? "text-yellow-500"
                         : "text-zinc-500"
                     }`}
                   >

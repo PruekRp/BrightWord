@@ -4,7 +4,8 @@ import Editor, { FinalPost } from "@/components/editor/Editor";
 import { useRouter } from 'next/navigation';
 
 const Edit = ({ params }:any) => {
-  const [editing, setEditing] = useState(false);
+  const [published, setPublished] = useState(false);
+  const [draft, setDraft] = useState(false);
   const [blogData, setBlogData] = useState<any>({});
   const [loading, setLoading] = useState(true);
   
@@ -35,7 +36,7 @@ const Edit = ({ params }:any) => {
   const handlePublished = async (updatedPost: any) => {
     console.log('published: ', updatedPost);
     try {
-      setEditing(true);
+      setPublished(true);
   
       const { content, title, slug, thumbnail, createAt } = updatedPost;
       const textToConvert = `สวัสดีหัวเรื่อง ${title} เนื้อหาที่จะพูดต่อไปนี้ ${content.replace(/(<([^>]+)>)/gi, "")}`;
@@ -94,7 +95,7 @@ const Edit = ({ params }:any) => {
         console.error("Failed to update blog post");
       }
     } finally {
-      setEditing(false);
+      setPublished(false);
       router.push('/')
     }
   };
@@ -103,8 +104,8 @@ const Edit = ({ params }:any) => {
   
   
     try {
-      setEditing(true);
-  
+      setDraft(true);
+      console.log("Draft updated:", updatedPost);
       const { content, title, slug, thumbnail, createAt } = updatedPost;
   
       const response = await fetch(`/api/blog/${updatedPost.id}`, {
@@ -131,8 +132,8 @@ const Edit = ({ params }:any) => {
         console.error("Failed to update blog post");
       }
     } finally {
-      setEditing(false);
-      router.push('/')
+      setDraft(false);
+      
     }
   };
   
@@ -147,8 +148,8 @@ const Edit = ({ params }:any) => {
         onPublish={handlePublished}
         onDraft={handleDraft}
         initialValue={blogData}
-        busy={editing}
-        btnTitle="Publish"
+        busyDraft={draft}
+        busyPublished={published}
       />
     </div>
   );

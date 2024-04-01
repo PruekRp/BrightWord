@@ -21,8 +21,9 @@ export interface FinalPost {
 
 interface Props {
   initialValue: FinalPost;
-  btnTitle?: string;
-  busy: boolean;
+  
+  busyDraft: boolean;
+  busyPublished: boolean;
   onPublish(post: FinalPost): void;
   onDraft(post:FinalPost) :void;
 }
@@ -40,8 +41,9 @@ const PosterUI: FC<{ label: string; className?: string }> = ({ label, className 
 
 const Editor: FC<Props> = ({
   initialValue,
-  btnTitle = "Publish",
-  busy = false,
+
+  busyDraft = false,
+  busyPublished = false,
   onPublish,
   onDraft
 }): JSX.Element => {
@@ -54,7 +56,8 @@ const Editor: FC<Props> = ({
     slug: "",
     status: ""
   });
-  console.log(initialValue)
+
+  console.log('initialValue',initialValue)
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -101,10 +104,12 @@ const Editor: FC<Props> = ({
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const { files } = target;
+    console.log(files)
     if (!files) return;
     const selectedFile = files[0];
     setFile(selectedFile);
     setSelectedThumbnail(URL.createObjectURL(selectedFile));
+    
   };
 
   const updateTitle: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
@@ -115,19 +120,14 @@ const Editor: FC<Props> = ({
  
   
   const handlePublished = () => {
-    if (!editor) {
-      setSubmitting(false);
-      console.error("Editor or file is not available.");
-      return;
-    }
-  
-    setSubmitting(true);
+
+   
   
     if (file) {
       const storage = getStorage(app);
       const name = new Date().getTime() + file.name;
       const storageRef = ref(storage, name);
-  
+      console.log('ทำงาน')
       const uploadTask = uploadBytesResumable(storageRef, file);
   
       uploadTask.on(
@@ -164,17 +164,10 @@ const Editor: FC<Props> = ({
   };
 
   const handleDraft = () => {
-    if (!editor) {
-      setSubmitting(false);
-      console.error("Editor or file is not available.");
-      return;
-    }
-    if (!file) {
-      console.error("No file selected.");
-    }
-  
+    
+    
     setSubmitting(true);
-  
+    console.log(file)
     if (file) {
       const storage = getStorage(app);
       const name = new Date().getTime() + file.name;
@@ -203,6 +196,7 @@ const Editor: FC<Props> = ({
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageData(downloadURL);
+            console.log(downloadURL)
             onDraft({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'draft' });
             setSubmitting(false);
           });
@@ -256,8 +250,8 @@ const Editor: FC<Props> = ({
         </div>
         <div className="flex">
           {/*แก้เรื่อง animation spin ด้วย */}
-          <ActionButton busy={busy || submitting} title="Draft" onClick={handleDraft} />
-          <ActionButton busy={busy || submitting} title={btnTitle} onClick={handlePublished} />
+          <ActionButton busy={busyDraft} title="Draft" onClick={handleDraft} />
+          <ActionButton busy={busyPublished} title={"Publish"} onClick={handlePublished} />
         </div>
       </div>
       <input

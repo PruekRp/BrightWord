@@ -92,7 +92,7 @@ export default function NavBar() {
             <AIChatButton />
             <Button>
               <span
-                className="text-yellow-300 font-bold cursor-pointer"
+                className="text-white hover:text-yellow-400 cursor-pointer font-bold"
                 onClick={handleWriteClick}
               >
                 edit
@@ -109,7 +109,7 @@ export default function NavBar() {
                 <Button>
                 <Link
                   href={`/blogUser/${data?.user?.id}`}
-                  className=" text-yellow-300 font-bold"
+                  className="text-white hover:text-yellow-400 font-bold"
                 >
                   My blogs
                 </Link>
