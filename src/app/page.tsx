@@ -19,7 +19,6 @@ export default function Home({ searchParams }: any) {
       <Suspense fallback="Loading..">
         <CardList page={page} />
       </Suspense>
-
       <ToastContainer />
     </section>
   );
