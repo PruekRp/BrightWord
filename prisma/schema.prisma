@@ -11,18 +11,18 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid()) @map("_id")
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  
-  access_token       String?  
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  
-  session_state      String?
+  id                String  @id @default(cuid()) @map("_id")
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -57,15 +57,14 @@ model VerificationToken {
 }
 
 model Blog {
-  id        String       @id @default(cuid()) @map("_id")
+  id        String   @id @default(cuid()) @map("_id")
   title     String
   content   String
   slug      String
   thumbnail String?
-  userEmail String
-  user      User      @relation(fields: [userEmail], references: [email])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   createAt  DateTime @default(now())
+  status    String   @default("draft") // เพิ่มฟิลด์ "status" และกำหนดค่าเริ่มต้นเป็น "draft"
+  audio     String?
 }
-
-
-

@@ -69,6 +69,36 @@ export const GET = async (req:Request,  {params}:{params:IParams}) => {
     }
 }
 
+export const POST = async (req: Request, { params }: { params: IParams }) => {
+  const { blogId } = params; //มันคือ userID
+
+  // ตรวจสอบว่า userId ถูกส่งมาหรือไม่
+  if (!blogId || typeof blogId !== 'string') {
+    throw new Error('Invalid userId');
+  }
+
+  try {
+    // สร้างบล็อกใหม่ในฐานข้อมูลโดยใช้ userId เท่านั้น
+    const newBlog = await prisma.blog.create({
+      data: {
+        userId: blogId,
+        title: '', //! สามารถกำหนดค่า title เป็นค่าว่างได้
+        content: '', //! สามารถกำหนดค่า content เป็นค่าว่างได้
+        slug: '' //! สามารถกำหนดค่า slug เป็นค่าว่างได้
+      },
+    });
+
+    return NextResponse.json(newBlog, { status: 201 }); // ส่งข้อมูลบล็อกใหม่ที่สร้างแล้วกลับไปพร้อมสถานะการทำงาน 201 Created
+  } catch (error) {
+    console.error(error);
+    return new NextResponse(
+      JSON.stringify({ message: 'Something went wrong!' }),
+      { status: 500 }
+    );
+  }
+};
+
+
 
 export async function PUT(
     request: Request,

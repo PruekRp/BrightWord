@@ -1,23 +1,12 @@
 // Editor.tsx
-"use client";
-import React, {
-  ChangeEventHandler,
-  FC,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEventHandler, FC, useEffect, useState } from "react";
 import { useEditor, EditorContent, Range, getMarkRange } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar/Toolbar";
 import Link from "@tiptap/extension-link";
 import TipTapImage from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { app } from "../../utils/firebase";
 import classNames from "classnames";
 import ActionButton from "../ActionButton";
@@ -27,22 +16,22 @@ export interface FinalPost {
   content: string;
   slug: string;
   thumbnail?: File | string;
+  status: string;
 }
 
 interface Props {
   initialValue: FinalPost;
-  btnTitle?: string;
-  busy: boolean;
-  onSubmit(post: FinalPost): void;
+  
+  busyDraft: boolean;
+  busyPublished: boolean;
+  onPublish(post: FinalPost): void;
+  onDraft(post:FinalPost) :void;
 }
 
 const commonClass =
   "border border-dash border-zinc-500 flex items-center justify-center rounded cursor-pointer aspect-video";
 
-const PosterUI: FC<{ label: string; className?: string }> = ({
-  label,
-  className,
-}) => {
+const PosterUI: FC<{ label: string; className?: string }> = ({ label, className }) => {
   return (
     <div className={classNames(commonClass, className)}>
       <span>{label}</span>
@@ -52,20 +41,23 @@ const PosterUI: FC<{ label: string; className?: string }> = ({
 
 const Editor: FC<Props> = ({
   initialValue,
-  btnTitle = "Submit",
-  busy = false,
-  onSubmit,
+
+  busyDraft = false,
+  busyPublished = false,
+  onPublish,
+  onDraft
 }): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
-  const [selectedThumbnail, setSelectedThumbnail] = useState<string | File | null>("");
+  const [selectedThumbnail, setSelectedThumbnail] = useState<any>("");
   const [file, setFile] = useState<File | null>(null);
   const [post, setPost] = useState<FinalPost>({
     title: "",
     content: "",
     slug: "",
+    status: ""
   });
 
-  
+  console.log('initialValue',initialValue)
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -97,6 +89,7 @@ const Editor: FC<Props> = ({
       },
     },
   });
+
   const slugify = (str: string) => {
     return str
       .replace(/\s+/g, "-")
@@ -111,64 +104,108 @@ const Editor: FC<Props> = ({
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const { files } = target;
+    console.log(files)
     if (!files) return;
-
     const selectedFile = files[0];
- 
     setFile(selectedFile);
     setSelectedThumbnail(URL.createObjectURL(selectedFile));
+    
   };
 
   const updateTitle: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const newTitle = target.value;
-    console.log(newTitle)
     const newSlug = slugify(newTitle);
     setPost({ ...post, title: newTitle, slug: newSlug });
   };
+ 
   
-  const handleSubmit = () => {  
-    if (!editor || !file) {
-      setSubmitting(false);
-      console.error("Editor or file is not available.");
-      return;
-    }
+  const handlePublished = () => {
+
+   
   
-    setSubmitting(true);
+    if (file) {
+      const storage = getStorage(app);
+      const name = new Date().getTime() + file.name;
+      const storageRef = ref(storage, name);
+      console.log('ทำงาน')
+      const uploadTask = uploadBytesResumable(storageRef, file);
   
-    const storage = getStorage(app);
-    const name = new Date().getTime() + file.name;
-    const storageRef = ref(storage, name);
-  
-    const uploadTask = uploadBytesResumable(storageRef, file);
-  
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-        }
-      },
-      (error) => {
-        setSubmitting(false);
-        console.error("Error uploading file:", error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImageData(downloadURL);
-          onSubmit({ ...post, content: editor.getHTML(), thumbnail: downloadURL });
-          console.log(onSubmit)
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
           setSubmitting(false);
-        });
-      }
-    );
+          console.error("Error uploading file:", error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageData(downloadURL);
+            onPublish({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'published' });
+            setSubmitting(false);
+          });
+        }
+      );
+    } else {
+      console.log(onPublish)
+      onPublish({ ...post, content: editor.getHTML(), status: 'published' });
+      setSubmitting(false);
+    }
+  };
+
+  const handleDraft = () => {
+    
+    
+    setSubmitting(true);
+    console.log(file)
+    if (file) {
+      const storage = getStorage(app);
+      const name = new Date().getTime() + file.name;
+      const storageRef = ref(storage, name);
+  
+      const uploadTask = uploadBytesResumable(storageRef, file);
+  
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          setSubmitting(false);
+          console.error("Error uploading file:", error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageData(downloadURL);
+            console.log(downloadURL)
+            onDraft({ ...post, content: editor.getHTML(), thumbnail: downloadURL, status: 'draft' });
+            setSubmitting(false);
+          });
+        }
+      );
+    } else {
+      onDraft({ ...post, content: editor.getHTML(), status: 'draft' });
+      setSubmitting(false);
+    }
   };
   
   useEffect(() => {
@@ -211,8 +248,10 @@ const Editor: FC<Props> = ({
             )}
           </label>
         </div>
-        <div>
-          <ActionButton busy={busy || submitting} title={btnTitle} onClick={handleSubmit} />
+        <div className="flex">
+          {/*แก้เรื่อง animation spin ด้วย */}
+          <ActionButton busy={busyDraft} title="Draft" onClick={handleDraft} />
+          <ActionButton busy={busyPublished} title={"Publish"} onClick={handlePublished} />
         </div>
       </div>
       <input
