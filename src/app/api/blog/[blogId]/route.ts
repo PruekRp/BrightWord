@@ -82,9 +82,9 @@ export const POST = async (req: Request, { params }: { params: IParams }) => {
     const newBlog = await prisma.blog.create({
       data: {
         userId: blogId,
-        title: '', //! สามารถกำหนดค่า title เป็นค่าว่างได้
-        content: '', //! สามารถกำหนดค่า content เป็นค่าว่างได้
-        slug: '' //! สามารถกำหนดค่า slug เป็นค่าว่างได้
+        title: '', //* กำหนดค่า title เป็นค่าว่างได้
+        content: '', //* กำหนดค่า content เป็นค่าว่างได้
+        slug: '' //* กำหนดค่า slug เป็นค่าว่างได้
       },
     });
 
