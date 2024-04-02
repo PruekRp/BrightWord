@@ -16,7 +16,7 @@ export default function NavBar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter(); // define useRouter
-  const [blogData, setBlogData] = useState('');
+  const [blogData, setBlogData] = useState<any>('');
   const handleLogin = () => {
     signIn("google");
   };
@@ -29,18 +29,18 @@ export default function NavBar() {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
-
+ 
   const handleWriteClick = async () => {
     // ตรวจสอบว่ามี session ของผู้ใช้หรือไม่
     if (!data) {
       console.error("User is not authenticated");
       return;
     }
-
+    
     // ตั้งค่า Loading เป็น true เมื่อเริ่มสร้างบล็อก
     setLoading(true);
-
-    // ส่งคำขอ POST ไปยัง API พร้อมกับ ID ของผู้ใช้
+   
+    // ส่งคำขอ POST ไปยัง API พร้อมกับ ID ของผู้ใช้ 
     try {
       const response = await fetch(`/api/blog/${data.user?.id}`, {
         method: "POST",
@@ -92,7 +92,7 @@ export default function NavBar() {
             <AIChatButton />
             <Button>
               <span
-                className="text-yellow-300 font-bold cursor-pointer"
+                className="text-white hover:text-yellow-400 cursor-pointer font-bold"
                 onClick={handleWriteClick}
               >
                 edit
@@ -108,8 +108,8 @@ export default function NavBar() {
               <div className="flex space-x-5 items-center">
                 <Button>
                 <Link
-                  href={`/blogUser/${data?.user.id}`}
-                  className=" text-yellow-300 font-bold"
+                  href={`/blogUser/${data?.user?.id}`}
+                  className="text-white hover:text-yellow-400 font-bold"
                 >
                   My blogs
                 </Link>
@@ -117,7 +117,7 @@ export default function NavBar() {
                 {/* Profile Image */}
                 <button onClick={toggleDropdown} className="focus:outline-none">
                   <Image
-                    src={data?.user.image}
+                    src={data?.user?.image}
                     width={30}
                     height={35}
                     alt="Profile Image"

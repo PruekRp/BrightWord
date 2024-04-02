@@ -1,13 +1,16 @@
 'use client'
 import { useState, useEffect } from "react";
 import Editor, { FinalPost } from "@/components/editor/Editor";
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+
 const Edit = ({ params }:any) => {
-  const [editing, setEditing] = useState(false);
-  const [blogData, setBlogData] = useState({});
+  const [published, setPublished] = useState(false);
+  const [draft, setDraft] = useState(false);
+  const [blogData, setBlogData] = useState<any>({});
   const [loading, setLoading] = useState(true);
   
   const router = useRouter()
+
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
@@ -30,14 +33,43 @@ const Edit = ({ params }:any) => {
   }, [params.blogId]);
 
   
-  const handlePublished = async (updatedPost:any) => {
-    console.log('UpdatedPost: ', updatedPost);
-  
+  const handlePublished = async (updatedPost: any) => {
+    console.log('published: ', updatedPost);
     try {
-      setEditing(true);
+      setPublished(true);
   
       const { content, title, slug, thumbnail, createAt } = updatedPost;
+      const textToConvert = `สวัสดีหัวเรื่อง ${title} เนื้อหาที่จะพูดต่อไปนี้ ${content.replace(/(<([^>]+)>)/gi, "")}`;
+      console.log('textToConvert:',textToConvert);
   
+      const botnoiRequestData = {
+        text: textToConvert,
+        speaker: "1", // โดยใช้ชุดพูดหมายเลข 1
+        volume: 1,
+        speed: 1,
+        type_media: "m4a",
+        save_file: true,
+        language: "th",
+      };
+  
+      const botnoiResponse = await fetch("https://api-voice.botnoi.ai/openapi/v1/generate_audio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Botnoi-Token": "enhTQUw0cWlHalNHMExtZEJyZkFiUnNWcjN2MjU2MTg5NA==", // แทนที่ด้วยโทเคนของคุณ
+        },
+        body: JSON.stringify(botnoiRequestData),
+      });
+  
+      if (!botnoiResponse.ok) {
+        throw new Error("Failed to generate audio");
+      }
+  
+      // ดึงข้อมูลเสียงที่สร้างได้จากการตอบกลับ
+      const audioData = await botnoiResponse.json();
+      console.log("Generated audio:", audioData);
+  
+      // ส่งข้อมูลบล็อกที่อัปเดตไปยัง API ของเซิร์ฟเวอร์ของคุณพร้อมกับ URL ของไฟล์เสียงที่สร้าง
       const response = await fetch(`/api/blog/${updatedPost.id}`, {
         method: "PUT",
         headers: {
@@ -49,11 +81,10 @@ const Edit = ({ params }:any) => {
           slug,
           thumbnail,
           createAt,
-          status:'published'
+          audio: audioData.audio_url, // เพิ่ม URL ของไฟล์เสียงที่สร้างโดยใช้ Botnoi API
+          status: 'published'
         }),
       });
-  
-      console.log('PUT Response:', response);
   
       if (response.ok) {
         const data = await response.json();
@@ -64,17 +95,17 @@ const Edit = ({ params }:any) => {
         console.error("Failed to update blog post");
       }
     } finally {
-      setEditing(false);
+      setPublished(false);
       router.push('/')
     }
   };
-
+  
   const handleDraft = async (updatedPost:any) => {
-    console.log('UpdatedPost: ', updatedPost);
+  
   
     try {
-      setEditing(true);
-  
+      setDraft(true);
+      console.log("Draft updated:", updatedPost);
       const { content, title, slug, thumbnail, createAt } = updatedPost;
   
       const response = await fetch(`/api/blog/${updatedPost.id}`, {
@@ -92,8 +123,6 @@ const Edit = ({ params }:any) => {
         }),
       });
   
-      console.log('PUT Response:', response);
-  
       if (response.ok) {
         const data = await response.json();
         console.log("Blog post updated:", data);
@@ -103,8 +132,8 @@ const Edit = ({ params }:any) => {
         console.error("Failed to update blog post");
       }
     } finally {
-      setEditing(false);
-
+      setDraft(false);
+      
     }
   };
   
@@ -112,15 +141,15 @@ const Edit = ({ params }:any) => {
   if (loading) {
     return <p>Loading...</p>;
   }
-  console.log(blogData)
+
   return (
     <div>
       <Editor
         onPublish={handlePublished}
         onDraft={handleDraft}
         initialValue={blogData}
-        busy={editing}
-        btnTitle="Publish"
+        busyDraft={draft}
+        busyPublished={published}
       />
     </div>
   );

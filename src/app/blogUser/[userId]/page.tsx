@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import CardPost from "@/components/blog/CardPost";
 import Loading from "@/app/blogs/[blogId]/loading";
+import { ToastContainer } from "react-toastify";
 
  const LoadingComponent = () => {
   return (
@@ -92,7 +93,7 @@ const BlogUser = ({ params }: any) => {
     };
 
     fetchData();
-  }, [status]); // เมื่อสถานะการแสดงบล็อกเปลี่ยนแปลงให้ทำการโหลดข้อมูลใหม่
+  }, [status,blogData]); // เมื่อสถานะการแสดงบล็อกเปลี่ยนแปลงให้ทำการโหลดข้อมูลใหม่
 
   // เพิ่มฟังก์ชันเพื่อเปลี่ยนสถานะการแสดงบล็อก
   const handleStatusChange = (newStatus: string) => {
@@ -154,7 +155,9 @@ const BlogUser = ({ params }: any) => {
           <LoadingComponent />
         )}
       </div>
+      <ToastContainer />
     </div>
+    
   );
 };
 

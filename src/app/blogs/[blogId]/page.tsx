@@ -4,9 +4,9 @@ import { useState, useEffect, Suspense } from "react";
 import parse from "html-react-parser";
 import Image from "next/image";
 import Loading from "./loading";
+import AudioPlayer from "@/components/AudioPlayer";
 
-
-async function getBlogs({ params }:any) {
+async function getBlogs({ params }: any) {
   try {
     const response = await fetch(
       `http://localhost:3000/api/blog/${params.blogId}`,
@@ -22,8 +22,7 @@ async function getBlogs({ params }:any) {
   }
 }
 
-
-const SinglePage = ({ params }:any) => {
+const SinglePage = ({ params }: any) => {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState(null);
   const [googleImage, setGoogleImage] = useState(null);
@@ -40,18 +39,16 @@ const SinglePage = ({ params }:any) => {
     initBlog();
   }, []);
 
-  if(!data) return <Loading/>;
+  if (!data) return <Loading />;
 
   return (
     <>
       <div className="flex mt-5 rounded-md mb-3 w-full">
         {/* Left Section */}
-        
+
         <div className="w-1/2 p-0 flex flex-col justify-between">
           {/* Title */}
-          <div className="text-3xl font-bold mb-28">
-            {data?.title}
-          </div>
+          <div className="text-3xl font-bold mb-28">{data?.title}</div>
 
           {/* Author and Created At */}
           <div className="flex text-gray-600 ">
@@ -66,13 +63,19 @@ const SinglePage = ({ params }:any) => {
                 />
               </div>
             )}
+            
             <div className="flex flex-col text-gray-600">
               <p>By: {data?.userEmail}</p>
-              <p>{data?.createAt.substring(0, 10) }</p>
+              <p>{data?.createAt.substring(0, 10)}</p>
+              
             </div>
+            
+            <AudioPlayer src={data.audio} />
+         
           </div>
+          
         </div>
-
+      
         {/* Right Section */}
         <div className="relative h-64 w-1/2">
           {/* Image */}
@@ -89,17 +92,10 @@ const SinglePage = ({ params }:any) => {
       </div>
       {/* please add html audio with style tailwindcss */}
 
-      <div className="mt-0">
-        <audio controls className="w-full bg-gray-100  rounded-md">
-          <source src="your-audio-file.mp3" type="audio/mp3" />
-          Your browser does not support the audio element.
-        </audio>
-      </div>
-
       <div className="prose prose-lg max-w-full mx-auto mt-10 text-gray-800">
-        {(data && parse(data?.content))}
+        {data && parse(data?.content)}
       </div>
-    </>  
+    </>
   );
 };
 

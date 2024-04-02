@@ -8,7 +8,7 @@ export default function AIChatButton() {
 
   return (
     <>
-      <Button onClick={() => setChatBoxOpen(true)} className="font-bold">
+      <Button onClick={() => setChatBoxOpen(true)} className="font-bold hover:text-yellow-400">
         <Bot size={20} className="mr-2" />
         AI Chat
       </Button>
