@@ -90,19 +90,7 @@ export default function NavBar() {
           {/* Navbar Actions */}
           <div className="flex items-center gap-4">
             <AIChatButton />
-            <Button>
-              <span
-                className="text-white hover:text-yellow-400 cursor-pointer font-bold"
-                onClick={handleWriteClick}
-              >
-                edit
-              </span>
-              {loading && (
-                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-                  <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-yellow-300"></div>
-                </div>
-              )}
-            </Button>
+           
 
             {data ? (
               <div className="flex space-x-5 items-center">
@@ -126,6 +114,19 @@ export default function NavBar() {
                     objectPosition="center"
                   />
                 </button>
+                <Button>
+              <span
+                className="text-white hover:text-yellow-400 cursor-pointer font-bold"
+                onClick={handleWriteClick}
+              >
+                edit
+              </span>
+              {loading && (
+                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-yellow-300"></div>
+                </div>
+              )}
+            </Button>
 
                 {/* Dropdown */}
                 {isDropdownOpen && (
