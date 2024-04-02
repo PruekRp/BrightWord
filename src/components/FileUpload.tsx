@@ -21,6 +21,7 @@ export default function FileUpload() {
       if (selectedFile.type !== "application/pdf") {
         setError("Invalid file type. Please select a PDF file.");
         console.log("PDF only");
+        toast.error('PDF only')
         e.target.value = "";
         setFile(null);
       } else {
@@ -32,6 +33,7 @@ export default function FileUpload() {
 
   const handleUploadClick = async () => {
     if (!file) {
+      toast.error('No pdf to upload')
       return;
     }
 
@@ -44,12 +46,13 @@ export default function FileUpload() {
       console.log(`Loading ${docs.length} chunks into pinecone...`);
       await embedAndStoreDocs(data?.user.id, docs);
       console.log("Data embedded and stored in pine-cone index");
+      toast.success('Upload Success!')
     } catch (error) {
       console.error("Error uploading file:", error);
+      toast.error('Upload Error!')
     } finally {
       setUploading(false);
     }
-    toast.success('Upload Success!')
   };
 
   const handleClearPinecone = async () => {
@@ -58,7 +61,7 @@ export default function FileUpload() {
       console.log(`Clear pinecone id:${data?.user.id}`);
       toast.success('Clear PDFs Success!')
     } catch (error) {
-      console.error("No PDFs")
+      console.error(error)
       toast.error('No PDFs')
     }
     
