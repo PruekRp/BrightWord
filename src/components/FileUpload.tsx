@@ -82,7 +82,7 @@ export default function FileUpload() {
           onClick={handleClearPinecone}
           className="ml-1 mr-1"
         >
-          Clear PDFszzzzz
+          Clear PDFs
         </Button>
       </div>
     </div>
