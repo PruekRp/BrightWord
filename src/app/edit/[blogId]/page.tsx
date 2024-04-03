@@ -56,14 +56,14 @@ const Edit = ({ params }:any) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Botnoi-Token": "enhTQUw0cWlHalNHMExtZEJyZkFiUnNWcjN2MjU2MTg5NA==", // แทนที่ด้วยโทเคนของคุณ
+          // "Botnoi-Token": "enhTQUw0cWlHalNHMExtZEJyZkFiUnNWcjN2MjU2MTg5NA==", // แทนที่ด้วยโทเคนของคุณ
         },
         body: JSON.stringify(botnoiRequestData),
       });
   
-      if (!botnoiResponse.ok) {
-        throw new Error("Failed to generate audio");
-      }
+      // if (!botnoiResponse.ok) {
+      //   throw new Error("Failed to generate audio");
+      // }
   
       // ดึงข้อมูลเสียงที่สร้างได้จากการตอบกลับ
       const audioData = await botnoiResponse.json();
