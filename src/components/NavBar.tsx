@@ -83,6 +83,7 @@ export default function NavBar() {
         <div className="flex flex-wrap gap-3 items-center justify-between m-auto">
           {/* Logo */}
           <Link href="/" className="flex">
+          
             <Image
               className=" rounded-full"
               src="/logo.jpg"
@@ -100,7 +101,7 @@ export default function NavBar() {
             <AIChatButton />
 
             {data ? (
-              <div className="flex space-x-5 items-center">
+              <div className="flex space-x-3 items-center">
                 <Button>
                   <Link
                     href={`/blogUser/${data?.user?.id}`}
@@ -109,12 +110,12 @@ export default function NavBar() {
                     My blogs
                   </Link>
                 </Button>
-                <span
+                <Button
                   className="text-white hover:text-yellow-400 cursor-pointer font-bold"
                   onClick={handleWriteClick}
                 >
                   edit
-                </span>
+                </Button>
                 {/* Profile Image */}
                 <button onClick={toggleDropdown} className="focus:outline-none">
                   <Image
