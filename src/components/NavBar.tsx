@@ -75,7 +75,7 @@ export default function NavBar() {
     if (blogData) {
       handleWriteClick();
     }
-  }, [blogData]);
+  }, []);
   return (
     <div className="relative bg-black">
       {/* Main Content */}
@@ -83,7 +83,6 @@ export default function NavBar() {
         <div className="flex flex-wrap gap-3 items-center justify-between m-auto">
           {/* Logo */}
           <Link href="/" className="flex">
-          
             <Image
               className=" rounded-full"
               src="/logo.jpg"
@@ -128,13 +127,7 @@ export default function NavBar() {
                     objectPosition="center"
                   />
                 </button>
-                <Button>
-                  {loading && (
-                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-                      <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-yellow-300"></div>
-                    </div>
-                  )}
-                </Button>
+              
 
                 {/* Dropdown */}
                 {isDropdownOpen && (
