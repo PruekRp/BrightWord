@@ -16,7 +16,8 @@ export default function NavBar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter(); // define useRouter
-  const [blogData, setBlogData] = useState<any>('');
+  const [blogData, setBlogData] = useState<any>("");
+  console.log(data);
   const handleLogin = () => {
     signIn("google");
   };
@@ -29,18 +30,18 @@ export default function NavBar() {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
- 
+
   const handleWriteClick = async () => {
     // ตรวจสอบว่ามี session ของผู้ใช้หรือไม่
     if (!data) {
       console.error("User is not authenticated");
       return;
     }
-    
+
     // ตั้งค่า Loading เป็น true เมื่อเริ่มสร้างบล็อก
     setLoading(true);
-   
-    // ส่งคำขอ POST ไปยัง API พร้อมกับ ID ของผู้ใช้ 
+
+    // ส่งคำขอ POST ไปยัง API พร้อมกับ ID ของผู้ใช้
     try {
       const response = await fetch(`/api/blog/${data.user?.id}`, {
         method: "POST",
@@ -74,14 +75,22 @@ export default function NavBar() {
     if (blogData) {
       handleWriteClick();
     }
-  }, []);
+  }, [blogData]);
   return (
     <div className="relative bg-black">
       {/* Main Content */}
       <div className="p-5  shadow-lg">
         <div className="flex flex-wrap gap-3 items-center justify-between m-auto">
           {/* Logo */}
-          <Link href="/">
+          <Link href="/" className="flex">
+          
+            <Image
+              className=" rounded-full"
+              src="/logo.jpg"
+              width={80}
+              height={80}
+              alt="Picture of the author"
+            />
             <span className="font-bold text-2xl text-yellow-300 flex items-center gap-2">
               BrightWord
             </span>
@@ -90,26 +99,24 @@ export default function NavBar() {
           {/* Navbar Actions */}
           <div className="flex items-center gap-4">
             <AIChatButton />
-           
 
             {data ? (
-              <div className="flex space-x-5 items-center">
+              <div className="flex space-x-3 items-center">
                 <Button>
-                <Link
-                  href={`/blogUser/${data?.user?.id}`}
-                  className="text-white hover:text-yellow-400 font-bold"
-                >
-                  My blogs
-                </Link>
+                  <Link
+                    href={`/blogUser/${data?.user?.id}`}
+                    className="text-white hover:text-yellow-400 font-bold"
+                  >
+                    My blogs
+                  </Link>
                 </Button>
-                <span
-                className="text-white hover:text-yellow-400 cursor-pointer font-bold"
-                onClick={handleWriteClick}
-              >
-                edit
-              </span>
+                <Button
+                  className="text-white hover:text-yellow-400 cursor-pointer font-bold"
+                  onClick={handleWriteClick}
+                >
+                  edit
+                </Button>
                 {/* Profile Image */}
-                
                 <button onClick={toggleDropdown} className="focus:outline-none">
                   <Image
                     src={data?.user?.image}
@@ -122,13 +129,12 @@ export default function NavBar() {
                   />
                 </button>
                 <Button>
-             
-              {loading && (
-                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-                  <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-yellow-300"></div>
-                </div>
-              )}
-            </Button>
+                  {loading && (
+                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                      <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-yellow-300"></div>
+                    </div>
+                  )}
+                </Button>
 
                 {/* Dropdown */}
                 {isDropdownOpen && (
