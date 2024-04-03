@@ -15,29 +15,31 @@ const CardPost = ({ key, item }: any) => {
   const [postDeleted, setPostDeleted] = useState(false);
   const handleDelete = async (postId: any) => {
     try {
-      //Set deleting to true to show loading state
+      // ตั้งค่า deleting เป็น true เพื่อแสดงสถานะการโหลด
       setDelete(true);
 
-      //Make a DELETE request to API
+      // ทำการลบโพสต์ด้วยการส่งคำขอ DELETE ไปยัง API
       const response = await fetch(`/api/blog/${postId}`, {
         method: "DELETE",
       });
 
       if (response.ok) {
-        // Handle successful deletion here, such as updating UI or redirecting
+        // จัดการเมื่อการลบสำเร็จ
         console.log(`Post with ID ${postId} deleted successfully`);
-        // ตั้งค่า State เพื่อสั่งให้ Component โหลดใหม่
+        // ตั้งค่า state เพื่อสั่งให้ component โหลดใหม่
         setPostDeleted(true);
       } else {
-        // Handle error cases
+        // จัดการกรณีเกิดข้อผิดพลาด
         console.error("Failed to delete post");
       }
     } catch (error) {
       console.error("Error deleting blog: ", error);
     } finally {
-      console.log('success')
+      // เมื่อลบเสร็จสิ้น ตั้งค่า deleting เป็น false
+      setDelete(false);
     }
   };
+
   return (
     <>
       {item.status === "published" ? (
@@ -72,10 +74,12 @@ const CardPost = ({ key, item }: any) => {
                   <Link href={`/edit/${item.id}`}>
                     <FaEdit className="text-orange-500 cursor-pointer ml-2 hover:text-orange-700 size-6" />
                   </Link>
-                  <FaTrashAlt
-                    className="text-red-500 cursor-pointer hover:text-red-700 size-5"
-                    onClick={() => handleDelete(item.id)}
-                  />
+                  <Link href="">
+                    <FaTrashAlt
+                      className="text-red-500 cursor-pointer hover:text-red-700 size-5"
+                      onClick={() => handleDelete(item.id)}
+                    />
+                  </Link>
                 </div>
               )}
             </div>
@@ -111,21 +115,19 @@ const CardPost = ({ key, item }: any) => {
           </div>
         </div>
       ) : (
-        <Link
-        href={
-          item.status === "published"
-            ? `/blogs/${item.id}`
-            : `/edit/${item.id}`
-        }
-      >
-        
         <div
           className="flex border-2 rounded-lg overflow-hidden shadow-md mb-4 w-100 justify-between cursor-pointer transition duration-300 hover:shadow-xl"
           key={key}
         >
           <div className="flex-1 p-4">
             <div className="flex justify-between items-start mb-2">
-             
+              <Link
+                href={
+                  item.status === "published"
+                    ? `/blogs/${item.id}`
+                    : `/edit/${item.id}`
+                }
+              >
                 <div className="flex justify-center items-center">
                   <h1 className="text-2xl font-bold mb-3">{item.title}</h1>
                   <h5
@@ -133,14 +135,14 @@ const CardPost = ({ key, item }: any) => {
                       item.status === "draft" ? "text-zinc-500" : ""
                     }`}
                   >
-                    
                     ({item.status})
                   </h5>
                 </div>
-                <FaTrashAlt
-                    className="text-red-500 cursor-pointer hover:text-red-700 size-5"
-                    onClick={() => handleDelete(item.id)}
-                  />
+              </Link>
+              <FaTrashAlt
+                className="text-red-500 cursor-pointer hover:text-red-700 size-5"
+                onClick={() => handleDelete(item.id)}
+              />
             </div>
             <div
               className="text-gray-700 mb-2 ml-1"
@@ -165,9 +167,8 @@ const CardPost = ({ key, item }: any) => {
             )}
           </div>
         </div>
-        </Link>
       )}
-        <ToastContainer />
+      <ToastContainer />
     </>
   );
 };

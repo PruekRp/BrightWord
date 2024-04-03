@@ -8,6 +8,7 @@ import { FaGoogle } from "react-icons/fa"; // Import Google ico
 import { useRouter } from "next/navigation"; // import useRouter
 
 import { useEffect, useState } from "react"; // Import Fragment and useState
+import { BiLoader } from "react-icons/bi";
 
 // Import other necessary dependencies
 
@@ -17,6 +18,7 @@ export default function NavBar() {
   const [loading, setLoading] = useState(false);
   const router = useRouter(); // define useRouter
   const [blogData, setBlogData] = useState<any>("");
+
   console.log(data);
   const handleLogin = () => {
     signIn("google");
@@ -110,11 +112,14 @@ export default function NavBar() {
                   </Link>
                 </Button>
                 <Button
-                  className="text-white hover:text-yellow-400 cursor-pointer font-bold"
+                  className={`text-white hover:text-yellow-400 cursor-pointer font-bold
+                  `}
                   onClick={handleWriteClick}
                 >
+                  {loading&& <BiLoader className="animate-spin" size={20} />}
                   edit
                 </Button>
+
                 {/* Profile Image */}
                 <button onClick={toggleDropdown} className="focus:outline-none">
                   <Image
@@ -127,7 +132,6 @@ export default function NavBar() {
                     objectPosition="center"
                   />
                 </button>
-              
 
                 {/* Dropdown */}
                 {isDropdownOpen && (
