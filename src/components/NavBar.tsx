@@ -17,7 +17,7 @@ export default function NavBar() {
   const [loading, setLoading] = useState(false);
   const router = useRouter(); // define useRouter
   const [blogData, setBlogData] = useState<any>("");
-  console.log(data)
+  console.log(data);
   const handleLogin = () => {
     signIn("google");
   };
@@ -75,14 +75,21 @@ export default function NavBar() {
     if (blogData) {
       handleWriteClick();
     }
-  }, []);
+  }, [blogData]);
   return (
     <div className="relative bg-black">
       {/* Main Content */}
       <div className="p-5  shadow-lg">
         <div className="flex flex-wrap gap-3 items-center justify-between m-auto">
           {/* Logo */}
-          <Link href="/">
+          <Link href="/" className="flex">
+            <Image
+              className=" rounded-full"
+              src="/logo.jpg"
+              width={80}
+              height={80}
+              alt="Picture of the author"
+            />
             <span className="font-bold text-2xl text-yellow-300 flex items-center gap-2">
               BrightWord
             </span>
