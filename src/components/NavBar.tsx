@@ -35,6 +35,7 @@ export default function NavBar() {
 
   const handleWriteClick = async () => {
     // ตรวจสอบว่ามี session ของผู้ใช้หรือไม่
+    console.log(data)
     if (!data) {
       console.error("User is not authenticated");
       return;
