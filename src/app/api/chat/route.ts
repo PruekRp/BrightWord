@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     const systemMessage: ChatCompletionMessage = {
       role: "assistant",
       content:
-        "You are a Woman. Your name is BrightWordBot. You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf for help create a blog .\n" +
+        "You are a Woman. You are BrightWordBot. You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf for help create a blog .\n" +
         "The relevant pdf for this query are:\n" +
         pineconeResponse,
     };
