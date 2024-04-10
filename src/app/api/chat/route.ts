@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     const systemMessage: ChatCompletionMessage = {
       role: "assistant",
       content:
-        "You are a Woman. You are BrightWordBot. You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf for help create a blog .\n" +
+        "You are a Woman. You are BrightWordBot. You are an intelligent pdf talking app and intelligent pdf summarizer. You answer and summarize the user's question based on their existing pdf for help create a blog. If the answer isn't in the PDF, look for it on the internet. \n" +
         "The relevant pdf for this query are:\n" +
         pineconeResponse,
     };
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     // console.log("Embedding from OpenAI:", embedding);
     // console.log("Messages to OpenAI API:", openaiMessages);
     // console.log("Pinecone Results in System Message:", pineconeResponse);
-
+    
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
   } catch (error) {
