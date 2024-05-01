@@ -24,8 +24,7 @@ async function getBlogs({ params }: any) {
 
 const SinglePage = ({ params }: any) => {
   const [data, setData] = useState<any>(null);
-  const [error, setError] = useState(null);
-  const [googleImage, setGoogleImage] = useState(null);
+
   console.log(data);
   const initBlog = async () => {
     try {
@@ -40,7 +39,7 @@ const SinglePage = ({ params }: any) => {
   }, []);
 
   if (!data) return <Loading />;
-
+  
   return (
     <>
       <div className="flex mt-5 rounded-md mb-3 w-full">
@@ -65,7 +64,7 @@ const SinglePage = ({ params }: any) => {
             )}
             
             <div className="flex flex-col text-gray-600">
-              <p>By: {data?.userEmail}</p>
+              <p>By: {data?.user.email}</p>
               <p>{data?.createAt.substring(0, 10)}</p>
               
             </div>
