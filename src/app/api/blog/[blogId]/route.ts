@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from '../../../../lib/db/prisma'
-import getCurrentUser from "@/app/actions/getCurrentUser";
-import { getAuthSession } from "@/utils/auth";
+
 
 interface IParams{
     blogId?:string

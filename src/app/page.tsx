@@ -1,11 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import ChatPage from "./chatbox/page";
-import getBlogs from "./actions/getBlogs";
-import getCurrentUser from "./actions/getCurrentUser";
-import CardPost from "@/components/blog/CardPost";
 import { Suspense } from "react";
 import CardList from "@/components/blog/CardList";
 import {  ToastContainer } from "react-toastify";
