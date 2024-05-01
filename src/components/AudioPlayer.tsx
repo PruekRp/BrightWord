@@ -21,7 +21,7 @@ const AudioPlayer = ({ src }:any) => {
   };
 
   return (
-    <div className="flex items-center ml-56">
+    <div className="flex items-center">
       <audio src={src} />
       <div className=" text-lg bg-white">
         {isPlaying ? (

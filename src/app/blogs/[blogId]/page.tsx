@@ -39,7 +39,7 @@ const SinglePage = ({ params }: any) => {
   }, []);
 
   if (!data) return <Loading />;
-  
+
   return (
     <>
       <div className="flex mt-5 rounded-md mb-3 w-full">
@@ -52,7 +52,7 @@ const SinglePage = ({ params }: any) => {
           {/* Author and Created At */}
           <div className="flex text-gray-600 ">
             {data?.user?.image && (
-              <div className="relative w-12 h-12 mr-3">
+              <div className="relative w-12 h-12 mr-2">
                 <Image
                   src={data.user.image}
                   alt=""
@@ -62,19 +62,15 @@ const SinglePage = ({ params }: any) => {
                 />
               </div>
             )}
-            
             <div className="flex flex-col text-gray-600">
               <p>By: {data?.user.email}</p>
               <p>{data?.createAt.substring(0, 10)}</p>
-              
             </div>
+
             
-            <AudioPlayer src={data.audio} />
-         
           </div>
-          
         </div>
-      
+          
         {/* Right Section */}
         <div className="relative h-64 w-1/2">
           {/* Image */}
@@ -90,7 +86,7 @@ const SinglePage = ({ params }: any) => {
         </div>
       </div>
       {/* please add html audio with style tailwindcss */}
-
+      <AudioPlayer src={data.audio} />
       <div className="prose prose-lg max-w-full mx-auto mt-10 text-gray-800">
         {data && parse(data?.content)}
       </div>
