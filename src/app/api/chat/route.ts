@@ -2,12 +2,13 @@ import { pdfIndex } from "@/lib/db/pinecone";
 import openai, { getEmbedding } from "@/lib/openai";
 import { ChatCompletionMessage } from "openai/resources/index.mjs";
 import { OpenAIStream, StreamingTextResponse } from "ai";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/utils/auth";
+// import { getServerSession } from "next-auth";
+// import { authOptions } from "@/utils/auth";
+import { getSession } from "./authOption";
 
-export async function getSession() {
-  return await getServerSession(authOptions)
-}
+// export async function getSession() {
+//   return await getServerSession(authOptions)
+// }
 
 export async function POST(req: Request) {
   try {
