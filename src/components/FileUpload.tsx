@@ -45,7 +45,7 @@ export default function FileUpload() {
       const docs = await getChunkedDocsFromPDF(file);
       console.log(`Loading ${docs.length} chunks into pinecone...`);
       await embedAndStoreDocs(data?.user.id, docs);
-      console.log("Data embedded and stored in pine-cone index");
+      console.log(`Data embedded and stored in pine-cone ${data?.user.id} index`);
       toast.success('Upload Success!')
     } catch (error) {
       console.error("Error uploading file:", error);
