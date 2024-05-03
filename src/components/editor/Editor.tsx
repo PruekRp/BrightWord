@@ -15,6 +15,7 @@ import {
 import { app } from "../../utils/firebase";
 import classNames from "classnames";
 import ActionButton from "../ActionButton";
+import Underline from '@tiptap/extension-underline';
 
 export interface FinalPost {
   title: string;
@@ -67,6 +68,7 @@ const Editor: FC<Props> = ({
     extensions: [
       StarterKit,
       TipTapImage,
+      Underline,
       Link.configure({
         autolink: false,
         linkOnPaste: false,
