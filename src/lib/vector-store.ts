@@ -1,7 +1,7 @@
 "use client";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { pdfIndex } from "./db/pinecone";
-import { PineconeStore } from "@langchain/community/vectorstores/pinecone";
+import { PineconeStore } from "@langchain/pinecone";
 
 export async function embedAndStoreDocs(
   id: string,
