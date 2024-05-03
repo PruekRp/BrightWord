@@ -15,7 +15,8 @@ import {
 import { app } from "../../utils/firebase";
 import classNames from "classnames";
 import ActionButton from "../ActionButton";
-import Underline from '@tiptap/extension-underline'
+import Underline from '@tiptap/extension-underline';
+
 export interface FinalPost {
   title: string;
   content: string;
