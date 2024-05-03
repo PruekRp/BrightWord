@@ -5,6 +5,7 @@ import { OpenAIStream, StreamingTextResponse } from "ai";
 // import { getServerSession } from "next-auth";
 // import { authOptions } from "@/utils/auth";
 import { getSession } from "./authOption";
+import { Session } from "next-auth";
 
 // export async function getSession() {
 //   return await getServerSession(authOptions)
@@ -12,7 +13,7 @@ import { getSession } from "./authOption";
 
 export async function POST(req: Request) {
   try {
-    const session = await getSession();
+    const session = await getSession() as Session;
     const body = await req.json();
     const messages: ChatCompletionMessage[] = body.messages;
 
