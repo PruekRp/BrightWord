@@ -4,6 +4,9 @@ export const getFocusedEditor = (editor: Editor) => {
   return editor.chain().focus();
 };
 
+
+
+
 export const validateUrl = (url: string) => {
   if (!url.trim()) return "";
 
