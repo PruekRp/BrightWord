@@ -98,7 +98,7 @@ const Toolbar: FC<Props> = ({ editor,onOpenImageClick }): JSX.Element | null => 
 
       <Button
         active={editor.isActive("underline")}
-        onClick={() => getFocusedEditor(editor).toggleUnderline().run()}
+        onClick={() => getFocusedEditor(editor).toggleUnderline().run()} 
       >
         <BsTypeUnderline />
       </Button>
