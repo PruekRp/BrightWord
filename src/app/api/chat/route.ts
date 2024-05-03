@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
     const embedding = await getEmbedding(inputText);
 
-    console.log(`id:${session?.user.id}`)
+    console.log(`id:${session?.user?.id as any}`)
 
     const vectorQueryResponse = await pdfIndex
       .namespace(`id:${session?.user.id}`)
