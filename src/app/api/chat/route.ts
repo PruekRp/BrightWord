@@ -25,10 +25,10 @@ export async function POST(req: Request) {
 
     const embedding = await getEmbedding(inputText);
 
-    console.log(`id:${session?.user?.id as any}`)
+    //console.log(`id:${session?.user?.id as any}`)
 
     const vectorQueryResponse = await pdfIndex
-      .namespace(`id:${session?.user.id}`)
+      .namespace(`id:${session?.user.id as any}`)
       .query({
         vector: embedding,
         topK: 4,
