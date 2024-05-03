@@ -1,5 +1,4 @@
 // CardPost.tsx
-import getCurrentUser from "@/app/actions/getCurrentUser";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
