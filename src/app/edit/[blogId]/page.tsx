@@ -14,7 +14,7 @@ const Edit = ({ params }:any) => {
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/blog/${params.blogId}`);
+        const res = await fetch(`http://bright-word.vercel.app/api/blog/${params.blogId}`);
         console.log(params.blogId)
         if (!res.ok) {
           throw new Error("Failed to fetch blog data");
