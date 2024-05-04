@@ -64,15 +64,20 @@ import { ToastContainer } from "react-toastify";
   );
 }
 
-const getData = async (params: any) => {
-  const res = await fetch(`http://bright-word.vercel.app/api/blogUser/${params}`, {
-    cache: "no-store",
-  });
+const getData = async (page:any, isStatus:any) => {
+  const statusParam = isStatus ? `&status=${isStatus}` : '';
+  const apiEndpoint = process.env.NEXTAUTH_URL;
+  const res = await fetch(
+    `${apiEndpoint}/api/blog?page=${page}${statusParam}`,
+    {
+      cache: "no-store",
+    }
+  );
 
   if (!res.ok) {
     throw new Error("Failed");
   }
-  
+
   return res.json();
 };
 
