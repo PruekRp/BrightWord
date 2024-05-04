@@ -64,15 +64,10 @@ import { ToastContainer } from "react-toastify";
   );
 }
 
-const getData = async (page:any, isStatus:any) => {
-  const statusParam = isStatus ? `&status=${isStatus}` : '';
-  const apiEndpoint = process.env.NEXTAUTH_URL;
-  const res = await fetch(
-    `${apiEndpoint}/api/blog?page=${page}${statusParam}`,
-    {
-      cache: "no-store",
-    }
-  );
+const getData = async (params: any) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blogUser/${params}`, {
+    cache: "no-store",
+  });
 
   if (!res.ok) {
     throw new Error("Failed");
@@ -81,11 +76,12 @@ const getData = async (page:any, isStatus:any) => {
   return res.json();
 };
 
+
 const BlogUser = ({ params }: any) => {
   const [blogData, setBlogData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("all"); // เพิ่ม state เพื่อเก็บสถานะการแสดงบล็อก
-  console.log(blogData)
+
   useEffect(() => {
     const fetchData = async () => {
       try {

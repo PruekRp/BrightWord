@@ -66,6 +66,7 @@ function LoadingComponent() {
 const getData = async (page:any, isStatus:any) => {
   const statusParam = isStatus ? `&status=${isStatus}` : '';
   const apiEndpoint = process.env.NEXTAUTH_URL;
+  console.log(apiEndpoint)
   const res = await fetch(
     `${apiEndpoint}/api/blog?page=${page}${statusParam}`,
     {

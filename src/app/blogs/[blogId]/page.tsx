@@ -9,7 +9,7 @@ import AudioPlayer from "@/components/AudioPlayer";
 async function getBlogs({ params }: any) {
   try {
     const response = await fetch(
-      `http://bright-word.vercel.app/api/${params.blogId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/blog/${params.blogId}`,
     );
     console.log(params.blogId);
     if (!response.ok) {
