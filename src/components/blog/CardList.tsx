@@ -63,10 +63,27 @@ function LoadingComponent() {
 }
 
 
+// const getData = async (page:any, isStatus:any) => {
+//   const statusParam = isStatus ? `&status=${isStatus}` : '';
+//   const res = await fetch(
+//     `http://localhost:3000/api/blog?page=${page}${statusParam}`,
+//     {
+//       cache: "no-store",
+//     }
+//   );
+
+//   if (!res.ok) {
+//     throw new Error("Failed");
+//   }
+
+//   return res.json();
+// };
+
+
 const getData = async (page:any, isStatus:any) => {
   const statusParam = isStatus ? `&status=${isStatus}` : '';
   const apiEndpoint = process.env.NEXTAUTH_URL;
-  console.log(apiEndpoint)
+  console.log('apiEndpoint งับ',apiEndpoint)
   const res = await fetch(
     `${apiEndpoint}/api/blog?page=${page}${statusParam}`,
     {
@@ -89,7 +106,7 @@ const CardList = ({ isStatus,page }:any) => {
   const POST_PER_PAGE = 2;
   const hasPrev = POST_PER_PAGE * (page - 1) > 0;
   const hasNext = POST_PER_PAGE * (page - 1) + POST_PER_PAGE < count;
-  console.log("blog จ้ะ",blogData)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
