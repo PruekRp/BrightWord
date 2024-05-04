@@ -22,7 +22,10 @@ const nextConfig = {
         );
     
         return config;
-      }
+      },
+      env: {
+        REACT_APP_API_KEY: 'https://bright-word.vercel.app',
+      },
   };
 
 module.exports = nextConfig
