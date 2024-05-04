@@ -66,7 +66,7 @@ function LoadingComponent() {
 const getData = async (page:any, isStatus:any) => {
   const statusParam = isStatus ? `&status=${isStatus}` : '';
   const res = await fetch(
-    `http://localhost:3000/api/blog?page=${page}${statusParam}`,
+    `http://bright-word.vercel.app/api/blog?page=${page}${statusParam}`,
     {
       cache: "no-store",
     }

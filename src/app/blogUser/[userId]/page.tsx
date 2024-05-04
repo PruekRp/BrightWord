@@ -65,7 +65,7 @@ import { ToastContainer } from "react-toastify";
 }
 
 const getData = async (params: any) => {
-  const res = await fetch(`http://localhost:3000/api/blogUser/${params}`, {
+  const res = await fetch(`http://bright-word.vercel.app/api/blogUser/${params}`, {
     cache: "no-store",
   });
 
