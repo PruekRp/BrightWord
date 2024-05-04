@@ -72,7 +72,7 @@ const getData = async (params: any) => {
   if (!res.ok) {
     throw new Error("Failed");
   }
-
+  
   return res.json();
 };
 
@@ -80,7 +80,7 @@ const BlogUser = ({ params }: any) => {
   const [blogData, setBlogData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("all"); // เพิ่ม state เพื่อเก็บสถานะการแสดงบล็อก
-
+  console.log(blogData)
   useEffect(() => {
     const fetchData = async () => {
       try {
