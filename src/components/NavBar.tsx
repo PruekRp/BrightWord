@@ -100,10 +100,11 @@ export default function NavBar() {
 
           {/* Navbar Actions */}
           <div className="flex items-center gap-4">
-            <AIChatButton />
+            
 
             {data ? (
               <div className="flex space-x-3 items-center">
+                <AIChatButton />
                 <Button>
                   <Link
                     href={`/blogUser/${data?.user?.id}`}
@@ -118,7 +119,7 @@ export default function NavBar() {
                   onClick={handleWriteClick}
                 >
                   {loading&& <BiLoader className="animate-spin" size={20} />}
-                  edit
+                  New blog
                 </Button>
 
                 {/* Profile Image */}
