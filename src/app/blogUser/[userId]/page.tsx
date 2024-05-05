@@ -65,7 +65,7 @@ import { ToastContainer } from "react-toastify";
 }
 
 const getData = async (params: any) => {
-  const res = await fetch(`http://localhost:3000/api/blogUser/${params}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blogUser/${params}`, {
     cache: "no-store",
   });
 
@@ -75,6 +75,7 @@ const getData = async (params: any) => {
 
   return res.json();
 };
+
 
 const BlogUser = ({ params }: any) => {
   const [blogData, setBlogData] = useState([]);
